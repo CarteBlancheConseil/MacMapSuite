@@ -1,0 +1,33 @@
+/*MESSAGES*/
+"id"				= "Identificativo";
+"creator"			= "Creatore";
+"dtoc"				= "Data di creazione";
+"modifier"			= "Modificatore";
+"dtom"				= "Data di modifica";
+"state"				= "Stato";
+"bounds"			= "Rettangolo";
+"geom"				= "Geometria";
+"name"				= "Nome";
+"color"				= "Colore";
+"subtype"			= "Sotto-tipo";
+"flag"				= "Flag";
+"direction"			= "Direzione";
+
+"defaultsubtype"	= "Sotto-tipo di default";
+
+"black"				= "Nero";
+"white"				= "Bianco";
+"red"				= "Rosso";
+"green"				= "Verde";
+"blue"				= "Blu";
+"cyan"				= "Cyano";
+"magenta"			= "Magenta";
+"yellow"			= "Giallo";
+
+//"ok"				= "OK";
+//"cancel"			= "Annulla";
+
+//"upgrademsg"		= "Vuoi aggiornare questo archivio al formato 3.1 ?";
+//"upgradeexp"		= "Questa operazione è irreversibile, e l'archivio non sarà più utilizzabile con le versioni precedenti.";
+
+/*ERRORS*/

@@ -1,0 +1,33 @@
+/*MESSAGES*/
+"id"				= "Identifiant";
+"creator"			= "Créateur";
+"dtoc"				= "Date de création";
+"modifier"			= "Modificateur";
+"dtom"				= "Date de modification";
+"state"				= "Etat";
+"bounds"			= "Rectangle";
+"geom"				= "Géométrie";
+"name"				= "Nom";
+"color"				= "Couleur";
+"subtype"			= "Sous-type";
+"flag"				= "Drapeau";
+"direction"			= "Direction";
+
+"defaultsubtype"	= "Sous-type par défaut";
+
+"black"				= "Noir";
+"white"				= "Blanc";
+"red"				= "Rouge";
+"green"				= "Vert";
+"blue"				= "Bleu";
+"cyan"				= "Cyan";
+"magenta"			= "Magenta";
+"yellow"			= "Jaune";
+
+//"ok"				= "Valider";
+//"cancel"			= "Annuler";
+
+//"upgrademsg"		= "Souhaitez-vous mettre à jour cette table au format 3.1 ?";
+//"upgradeexp"		= "Cette action est irréversible, et la table ne sera plus utilisable avec les versions précédentes.";
+
+/*ERRORS*/
