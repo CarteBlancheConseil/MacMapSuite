@@ -477,14 +477,15 @@ _te_("type is lock");
 _te_("name "+name+" found in database");
 		return(-2);
 	}
-	if(_objs->AddField(name,kind,len,decs)){
-_te_("_objs->AddField failed");
+int status;
+	if((status=_objs->AddField(name,kind,len,decs))){
+_te_("_objs->AddField failed with "+status);
 		return(-3);
 	}
 	//hdr_open();
 	//fld_open();
 	//cnt_open();
-int status=report_add(kind,len,decs,name);
+    status=report_add(kind,len,decs,name);
 	//cnt_close();
 	//fld_close();
 	//hdr_close();
