@@ -94,6 +94,7 @@
 		149919BC1B7E14700008B5CE /* libpq.4.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 149919BB1B7E14700008B5CE /* libpq.4.1.dylib */; };
 		1499A149097B77C100DA8347 /* MacMapSuiteC.h in Headers */ = {isa = PBXBuildFile; fileRef = 1499A148097B77C100DA8347 /* MacMapSuiteC.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1499A560097BCB8800DA8347 /* MacMapSuiteCPP.h in Headers */ = {isa = PBXBuildFile; fileRef = 1499A55F097BCB8800DA8347 /* MacMapSuiteCPP.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		149D77171CAD31B500505E82 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 149D77161CAD31B500505E82 /* libxml2.dylib */; };
 		14A04E7B099B507B00F9DA12 /* mms_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 14A04E7A099B507B00F9DA12 /* mms_config.h */; };
 		14A27AED099CAD09006C8FE1 /* wproj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14A27AEB099CAD09006C8FE1 /* wproj.cpp */; };
 		14A27AEE099CAD09006C8FE1 /* wproj.h in Headers */ = {isa = PBXBuildFile; fileRef = 14A27AEC099CAD09006C8FE1 /* wproj.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -247,6 +248,7 @@
 		1499A4B2097B977D00DA8347 /* shapefil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = shapefil.h; path = units_shapelib/shapefil.h; sourceTree = "<group>"; };
 		1499A4B3097B977D00DA8347 /* shpopen.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = shpopen.c; path = units_shapelib/shpopen.c; sourceTree = "<group>"; };
 		1499A55F097BCB8800DA8347 /* MacMapSuiteCPP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MacMapSuiteCPP.h; sourceTree = "<group>"; };
+		149D77161CAD31B500505E82 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		14A04E7A099B507B00F9DA12 /* mms_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mms_config.h; sourceTree = "<group>"; };
 		14A27AEB099CAD09006C8FE1 /* wproj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = wproj.cpp; sourceTree = "<group>"; };
 		14A27AEC099CAD09006C8FE1 /* wproj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wproj.h; sourceTree = "<group>"; };
@@ -311,6 +313,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				149D77171CAD31B500505E82 /* libxml2.dylib in Frameworks */,
 				149919BC1B7E14700008B5CE /* libpq.4.1.dylib in Frameworks */,
 				147E6D711B7CD8E4001BD909 /* libmitab-1.0.1.dylib in Frameworks */,
 				146A5E561B73BC3400D02529 /* libgeos_c.dylib in Frameworks */,
@@ -347,6 +350,7 @@
 		0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				149D77161CAD31B500505E82 /* libxml2.dylib */,
 				146359351B0379890006EB54 /* UXLibs */,
 				14EFB0B61292761C0038AAD4 /* CoreFoundation.framework */,
 			);
@@ -985,6 +989,11 @@
 				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
 				GCC_WARN_MISSING_PARENTHESES = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(SDKROOT)/usr/include/libxml2",
+				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = /Library/Frameworks/MacMapSuite.framework/Versions/A/Frameworks/unix/lib;

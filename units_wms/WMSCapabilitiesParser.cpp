@@ -25,176 +25,173 @@
 // 
 //----------------------------------------------------------------------------
 // 06/07/2009 creation.
+// 31/03/2016 porting from CFXMLTree deprecated API to libxml2.
 //----------------------------------------------------------------------------
 
 #include "WMSCapabilitiesParser.h"
+#include "C_Utils.h"
+
 #include <MacMapSuite/bTrace.h>
 
-// ---------------------------------------------------------------------------
-// 
-// -----------
-static void GetValue(CFXMLTreeRef xmlTree, char* str){
-int				n;
-CFXMLTreeRef	xmlTreeNode;
-CFXMLNodeRef	node;
-CFStringRef		cfs;
+#include <libxml/parser.h>
+#include <libxml/tree.h>
 
-	str[0]=0;
-	n=CFTreeGetChildCount(xmlTree);
-	if(n!=1){
-		return;
-	}
-	xmlTreeNode=CFTreeGetChildAtIndex(xmlTree,0);
-	node=CFXMLTreeGetNode(xmlTreeNode);
-	if(CFXMLNodeGetTypeCode(node)!=kCFXMLNodeTypeText){
-		return;
-	}
-	cfs=CFXMLNodeGetString(node);
-	CFStringGetCString(cfs,str,4096,kCFStringEncodingMacRoman);
+// ---------------------------------------------------------------------------
+//
+// -----------
+static void GetValue(xmlNode *root, char* str){
+xmlNode*    cur_node=root->children;
+
+    str[0]=0;
+    if(!cur_node){
+        return;
+    }
+    if(cur_node->type!=XML_TEXT_NODE){
+        return;
+    }
+    if(!cur_node->content){
+        return;
+    }
+CFStringRef cfs=CFStringCreateWithCString(kCFAllocatorDefault,(char*)cur_node->content,kCFStringEncodingUTF8);
+    CFStringGetCString(cfs,str,4096,kCFStringEncodingMacRoman);
+    CFRelease(cfs);
 }
 
 // ---------------------------------------------------------------------------
-// 
+//
 // -----------
-static void GetSRS(CFXMLTreeRef xmlTree, bArray* srs){
-char	str[4096];
-	GetValue(xmlTree,str);
-int		srid;
-char*	p=strstr(str,":");
+static void GetSRS(xmlNode *root, bArray* srs){
+ char	str[4096];
+	GetValue(root,str);
+ int		srid;
+ char*	p=strstr(str,":");
 	while(p){
-		p++;
-		srid=atoi(p);
-		if(srid>0){
-			srs->add(&srid);
-		}
-		p=strstr(p,":");
+        p++;
+        srid=atoi(p);
+        if(srid>0){
+            srs->add(&srid);
+        }
+        p=strstr(p,":");
 	}
 }
 
 // ---------------------------------------------------------------------------
-// 
+//
 // -----------
-static void ParseOneLayer(CFXMLTreeRef xmlTree, bArray &arr, int level){
-int				n;
-CFXMLTreeRef	xmlTreeNode;
-CFXMLNodeRef	node;
-CFStringRef		cfs;
+static void ParseOneLayer(xmlNode *root, bArray &arr, int level){
 wmslayerdesc	desc={NULL,NULL,NULL,level};
 char			str[2048];
-//int				srs;
-
-	desc.srs=new bArray(sizeof(int));
-	n=CFTreeGetChildCount(xmlTree);
-	for(int i=0;i<n;i++){
-		xmlTreeNode=CFTreeGetChildAtIndex(xmlTree,i);
-		node=CFXMLTreeGetNode(xmlTreeNode);
-		cfs=CFXMLNodeGetString(node);
-		if(CFStringCompare(cfs,CFSTR("Name"),0)==kCFCompareEqualTo){
-			GetValue(xmlTreeNode,str);
-			desc.name=strdup(str);
-		}
-		else if(CFStringCompare(cfs,CFSTR("Title"),0)==kCFCompareEqualTo){
-			GetValue(xmlTreeNode,str);
-			desc.title=strdup(str);
-		}
-		else if(CFStringCompare(cfs,CFSTR("SRS"),0)==kCFCompareEqualTo){
-			GetSRS(xmlTreeNode,desc.srs);
-		}
-		else if(CFStringCompare(cfs,CFSTR("Layer"),0)==kCFCompareEqualTo){
-			ParseOneLayer(xmlTreeNode,arr,level+1);
-		}
-	}
-	arr.add(&desc);
+xmlNode*        cur_node=NULL;
+char*           tmp;
+   
+    desc.srs=new bArray(sizeof(int));
+    for(cur_node=root;cur_node;cur_node=cur_node->next){
+        if(cur_node->type==XML_ELEMENT_NODE){
+            if(cur_node->name){
+                tmp=strdup((const char*)cur_node->name);
+                strupper(tmp);
+                if(strcmp(tmp,"NAME")==0){
+                    GetValue(cur_node,str);
+                    desc.name=strdup(str);
+                }
+                else if(strcmp(tmp,"TITLE")==0){
+                    GetValue(cur_node,str);
+                    desc.title=strdup(str);
+                }
+                else if(strcmp(tmp,"SRS")==0){
+                    GetSRS(cur_node,desc.srs);
+                }
+                else if(strcmp(tmp,"LAYER")==0){
+                   ParseOneLayer(cur_node->children,arr,level+1);
+                }
+                free(tmp);
+            }
+        }
+    }
+    arr.add(&desc);
 }
 
 // ---------------------------------------------------------------------------
-// 
+//
 // -----------
-static void ParseLayers(CFXMLTreeRef xmlTree, bArray &arr){
-int				n;
-CFXMLTreeRef	xmlTreeNode;
-CFXMLNodeRef	node;
-CFStringRef		cfs;
-	
-	n=CFTreeGetChildCount(xmlTree);
-	for(int i=0;i<n;i++){
-		xmlTreeNode=CFTreeGetChildAtIndex(xmlTree,i);
-		node=CFXMLTreeGetNode(xmlTreeNode);
-		if(CFXMLNodeGetTypeCode(node)!=kCFXMLNodeTypeElement){
-			continue;
-		}
-		cfs=CFXMLNodeGetString(node);
-		if(CFStringCompare(cfs,CFSTR("Layer"),0)==kCFCompareEqualTo){
-			ParseOneLayer(xmlTreeNode,arr,0);
-		}		
-	}
+static void ParseLayers(xmlNode *root, bArray &arr){
+xmlNode*    cur_node=NULL;
+char*       tmp;
+    
+    for(cur_node=root;cur_node;cur_node=cur_node->next){
+        if(cur_node->type==XML_ELEMENT_NODE){
+            if(cur_node->name){
+                tmp=strdup((const char*)cur_node->name);
+                strupper(tmp);
+                if(strcmp(tmp,"LAYER")==0){
+                    ParseOneLayer(cur_node->children,arr,0);
+                }
+                free(tmp);
+            }
+        }
+    }
 }
 
 // ---------------------------------------------------------------------------
-// 
+//
 // -----------
-static void ParseCapabilities(CFXMLTreeRef xmlTree, bArray &arr){
-int				n;
-CFXMLTreeRef	xmlTreeNode;
-CFXMLNodeRef	node;
-CFStringRef		cfs;
-	
-	n=CFTreeGetChildCount(xmlTree);
-	for(int i=0;i<n;i++){
-		xmlTreeNode=CFTreeGetChildAtIndex(xmlTree,i);
-		node=CFXMLTreeGetNode(xmlTreeNode);
-		if(CFXMLNodeGetTypeCode(node)!=kCFXMLNodeTypeElement){
-			continue;
-		}
-		cfs=CFXMLNodeGetString(node);
-		if(CFStringCompare(cfs,CFSTR("Capability"),0)==kCFCompareEqualTo){
-			ParseLayers(xmlTreeNode,arr);
-		}		
-	}
+static void ParseCapabilities(xmlNode *root, bArray &arr){
+_bTrace_("ParseCapabilities",true);
+xmlNode*    cur_node=NULL;
+char*       tmp;
+    
+    for(cur_node=root;cur_node;cur_node=cur_node->next){
+        if(cur_node->type==XML_ELEMENT_NODE){
+            if(cur_node->name){
+                tmp=strdup((const char*)cur_node->name);
+                strupper(tmp);
+                if(strcmp(tmp,"CAPABILITY")==0){
+                    ParseLayers(cur_node->children,arr);
+                }
+                free(tmp);
+           }
+        }
+    }
 }
 
-
 // ---------------------------------------------------------------------------
-// 
+//
 // -----------
 int WMSCapabilitiesParser(void* data, size_t sz, bArray &arr){
 _bTrace_("WMSCapabilitiesParser",true);
-int				n;
-CFXMLTreeRef	xmlTree,xmlTreeNode;
-CFXMLNodeRef	node;
-CFStringRef		cfs;
-int				res=-3;
-CFDataRef		xmlData=CFDataCreate(kCFAllocatorDefault,(UInt8*)data,sz);
+xmlDoc *doc=xmlReadMemory((const char*)data,sz,"noname.xml",NULL,XML_PARSE_NOBLANKS);
+    if(doc==NULL){
+_te_("xmlReadMemory failed");
+        return -1;
+    }
+xmlNode *root=xmlDocGetRootElement(doc);
+    if(root==NULL){
+_te_("xmlDocGetRootElement returned NULL");
+        xmlFreeDoc(doc);
+        return -2;
+    }
+    if(root->type!=XML_ELEMENT_NODE) {
+_te_("root->type!=XML_ELEMENT_NODE");
+        xmlFreeDoc(doc);
+        return -3;
+    }
+xmlNode*    cur_node=NULL;
+char*       tmp;
 
-	if(xmlData==NULL){
-_te_("xmlData==NULL");
-		return(-1);
-	}	
-	xmlTree=CFXMLTreeCreateFromData(	kCFAllocatorDefault,
-										xmlData, 
-										NULL, 
-										kCFXMLParserAllOptions,
-										kCFXMLNodeCurrentVersion);
-	if(xmlTree==NULL){
-_te_("xmlTree==NULL");
-		return(-2);
-	}
-	n=CFTreeGetChildCount(xmlTree);
-	for(int i=0;i<n;i++){
-		xmlTreeNode=CFTreeGetChildAtIndex(xmlTree,i);
-		node=CFXMLTreeGetNode(xmlTreeNode);
-		if(CFXMLNodeGetTypeCode(node)!=kCFXMLNodeTypeElement){
-			continue;
-		}
-		cfs=CFXMLNodeGetString(node);
-		CFShowStr(cfs);
-		if(CFStringCompare(cfs,CFSTR("WMT_MS_Capabilities"),0)==kCFCompareEqualTo){
-			ParseCapabilities(xmlTreeNode,arr);
-			res=0;
-		}
-	}
-	CFRelease(xmlData);
-	return(res);
+    for(cur_node=root;cur_node;cur_node=cur_node->next){
+        if(cur_node->type==XML_ELEMENT_NODE){
+            if(cur_node->name){
+                tmp=strdup((const char*)cur_node->name);
+                strupper(tmp);
+                if(strcmp(tmp,"WMT_MS_CAPABILITIES")==0){
+                    ParseCapabilities(cur_node->children,arr);
+                }
+                free(tmp);
+            }
+        }
+    }
+    xmlFreeDoc(doc);
+    return 0;
 }
 
 // ---------------------------------------------------------------------------
