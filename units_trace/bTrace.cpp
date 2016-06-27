@@ -233,11 +233,11 @@ void bTrace::err(bString& str){
 	fprintf(_fp,">!!! ERROR ");	
 	if(_fct[0]){
 		fprintf(_fp,"in ");
-		fprintf(_fp,_fct);
+		fprintf(_fp,"%s",_fct);
 		fprintf(_fp," ");
 	}
 	fprintf(_fp,": ");
-	fprintf(_fp,str.string());
+	fprintf(_fp,"%s",str.string());
 	fprintf(_fp," !!!\n");
 		
 	fflush(_fp);
@@ -252,10 +252,10 @@ void bTrace::msg(bString& str){
 	}
 	indent();
 	if(_fct[0]){
-		fprintf(_fp,_fct);
+		fprintf(_fp,"%s",_fct);
 		fprintf(_fp," : ");
 	}
-	fprintf(_fp,str.string());
+	fprintf(_fp,"%s",str.string());
 	fprintf(_fp,"\n");
 	if(_flush){
 		fflush(_fp);
@@ -272,11 +272,11 @@ void bTrace::wrn(bString& str){
 	fprintf(_fp,">!!! WARNING ");	
 	if(_fct[0]){
 		fprintf(_fp,"in ");
-		fprintf(_fp,_fct);
+		fprintf(_fp,"%s",_fct);
 		fprintf(_fp," ");
 	}
 	fprintf(_fp,": ");
-	fprintf(_fp,str.string());
+	fprintf(_fp,"%s",str.string());
 	fprintf(_fp," !!!\n");
 		
 	fflush(_fp);

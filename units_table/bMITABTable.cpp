@@ -157,6 +157,7 @@ bMITABTable::~bMITABTable(){
 		}
 		mitab_c_destroy_feature(_feat);
 	}
+    _arr.reset();
 	if(_mt){
 		mitab_c_close(_mt);
 	}

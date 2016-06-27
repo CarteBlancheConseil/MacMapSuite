@@ -167,7 +167,7 @@ char* r;
 // -----------
 void bStdFile::write(const char* fmt){
 	if(_fp){
-		fprintf(_fp,fmt);
+		fprintf(_fp,"%s",fmt);
 	}
 }
 
