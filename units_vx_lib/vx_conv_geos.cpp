@@ -48,7 +48,7 @@ static int _g_inited=0;
 // 
 // -----------
 static void g_func(const char *fmt, ...){
-	fprintf(stderr,"<%s>\n",fmt);
+//	fprintf(stderr,"<%s>\n",fmt);
 }
 
 // ---------------------------------------------------------------------------

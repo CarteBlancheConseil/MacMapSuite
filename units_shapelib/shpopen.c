@@ -1864,3 +1864,26 @@ SHPRewindObject( SHPHandle hSHP, SHPObject * psObject )
 
     return bAltered;
 }
+
+
+/*
+int PIP(SHPObject * object, SHPObject * Polygon){
+long i,j,cn=0;                                                                                      // the crossing number counter
+
+    for(j=0;j<object->nVertices-1;j++){                                                             // edge from V[i] to V[i+1]
+        for(i=0;i<Polygon->nVertices-1;i++){                                                        // edge from V[i] to V[i+1]
+            if (((Polygon->padfY[i]<=object->padfY[j])&&(Polygon->padfY[i+1]>object->padfY[j])) ||  // an upward crossing
+                ((Polygon->padfY[i]>object->padfY[j])&&(Polygon->padfY[i+1]<=object->padfY[j]))){   // a downward crossing
+double vt=(double)(object->padfY[j]-Polygon->padfY[i])/(Polygon->padfY[i+1]-Polygon->padfY[i]);
+                if(object->padfX[j]<Polygon->padfX[i]+vt*(Polygon->padfX[i+1]-Polygon->padfX[i])){  // P.x < intersect
+                    ++cn;                                                                           // a valid crossing of y=P.y right of P.x
+                }
+            }
+        }
+        if(cn&1){
+            return 1;
+        }
+    }
+    return(0); // 0 if even (out), and 1 if odd (in)
+}*/
+

@@ -61,7 +61,7 @@ int i,cn=0;														// the crossing number counter
     for(i=0;i<n-1;i++){											// edge from V[i] to V[i+1]
        if (	((V[i].y<=P.y)&&(V[i+1].y>P.y)) ||					// an upward crossing
 			((V[i].y>P.y)&&(V[i+1].y<=P.y))){					// a downward crossing
-            double vt=(float)(P.y-V[i].y)/(V[i+1].y-V[i].y);
+double vt=(double)(P.y-V[i].y)/(V[i+1].y-V[i].y);
             if(P.x<V[i].x+vt*(V[i+1].x-V[i].x)){				// P.x < intersect
                 ++cn;											// a valid crossing of y=P.y right of P.x
 			}
