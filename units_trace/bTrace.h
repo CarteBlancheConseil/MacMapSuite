@@ -67,39 +67,40 @@ extern int _USE_STDERR_;
 //----------------------------------------------------------------------------
 
 class bTrace{
-	public:
-		bTrace					(	const char* name, 
-									bool show);
-		virtual ~bTrace			(	);
+public:
+    bTrace					(	const char* name, 
+                                bool show);
+    virtual ~bTrace			(	);
 
-		virtual void err		(	bString& str);
-		virtual void msg		(	bString& str);
-		virtual void wrn		(	bString& str);
-		
-		virtual void set_on		(	bool b);
-		virtual bool get_on		(	);
-		virtual void set_flush	(	bool b);
-		virtual bool get_flush	(	);
+    virtual void err		(	bString& str);
+    virtual void msg		(	bString& str);
+    virtual void wrn		(	bString& str);
+    
+    virtual void set_on		(	bool b);
+    virtual bool get_on		(	);
+    virtual void set_flush	(	bool b);
+    virtual bool get_flush	(	);
 
-	protected:
-		virtual void enter		(	);
-		virtual void leave		(	);
-		virtual void sep		(	);
-		virtual void wtime		(	);
-		virtual void indent		(	);
+    virtual void sep		(	);
+    virtual void wtime		(	);
 
-	private:
-		virtual void init		(	);
-		virtual void close		(	);
-		
-		static int		_indent;
-		static bool		_on;
-		static bool		_flush;
-		static bTrace*	_inst;
-		static FILE*	_fp;
-		
-		char			_fct[256];
-		bool			_show;
+protected:
+    virtual void enter		(	);
+    virtual void leave		(	);
+    virtual void indent		(	);
+
+private:
+    virtual void init		(	);
+    virtual void close		(	);
+    
+    static int		_indent;
+    static bool		_on;
+    static bool		_flush;
+    static bTrace*	_inst;
+    static FILE*	_fp;
+    
+    char			_fct[256];
+    bool			_show;
 		
 };
 

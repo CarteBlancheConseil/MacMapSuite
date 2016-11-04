@@ -114,9 +114,10 @@ CURLcode	ret;
 		curl_easy_setopt(cuh,CURLOPT_WRITEFUNCTION,mwriteFunction);
 	}
     if(mmu->user){
-        curl_easy_setopt(cuh,CURLOPT_HTTPAUTH,CURLAUTH_DIGEST);
+        curl_easy_setopt(cuh,CURLOPT_HTTPAUTH,CURLAUTH_BASIC);
+//        curl_easy_setopt(cuh,CURLOPT_HTTPAUTH,CURLAUTH_DIGEST);
 		curl_easy_setopt(cuh,CURLOPT_USERPWD,mmu->user);
-	}
+    }
     ret=curl_easy_perform(cuh);
 	if(mmu->fp){
 		fclose(mmu->fp);
@@ -192,6 +193,8 @@ mmurl	mmu;
     else if(mmu.buffer){
         *buffer=mmu.buffer;
         *buffersz=mmu.buffersz;
+    }
+    else{
     }
     if(mmu.fname){
         free(mmu.fname);
