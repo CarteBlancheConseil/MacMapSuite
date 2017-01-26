@@ -53,8 +53,12 @@ ivertices*	ivs_intersect_as_line	(	ivertices* vsa,
 										ivertices* vsb);
 ivertices*	ivs_intersect_as_surf	(	ivertices* vsa, 
 										ivertices* vsb);
+ivertices*  ivs_clip_line_in_surf   (   ivertices* lin,
+                                        ivertices* gon);
+ivertices*  ivs_clip_line_out_surf  (   ivertices* lin,
+                                        ivertices* gon);
 
-ivertices*	ivs_convexify			(	i2dvertex*	vx, 
+ivertices*	ivs_convexify			(	i2dvertex*	vx,
 										int n);
 ivertices*	ivs_polygonize			(	i2dvertex* vx, 
 										int n);
@@ -71,8 +75,9 @@ ivertices*	ivs_bufferize_line		(	ivertices* vsa,
 ivertices*	ivs_bufferize_point		(	ivertices* vsa, 
 										double d);
 
-ivertices*	ivs_split_surf_with_line(	ivertices* srf, 
+ivertices*	ivs_split_surf_with_line(	ivertices* gon,
 										ivertices* lin);
+
 int         ivs_build_point_offsets (   ivertices* vxs);
 	
 //----------------------------------------------------------------------------

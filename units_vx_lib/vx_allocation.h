@@ -80,6 +80,8 @@ int			ivspart2ivs	(	ivertices* vin,
 int			dvspart2dvs	(	dvertices* vin,
 							int part,			// in [0..n-1]
 							dvertices**	vxs);
+ivertices*  nth_ivs		(	ivertices* vxs,
+                            long part);
 	
 //----------------------------------------------------------------------------
 

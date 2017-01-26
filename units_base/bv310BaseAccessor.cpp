@@ -3587,8 +3587,9 @@ _te_("set_default_value failed : database corrupted");
 // 
 // -----------
 bool bv310BaseAccessor::add_constraint(int f, int kind, void* val, bool check){
-_bTrace_("bv310BaseAccessor::add_constraint",true);
+_bTrace_("bv310BaseAccessor::add_constraint(int,int,void*,bool)",false);
 field	fp;
+//_tm_("check="+check);
 	if(!_elts.get(f,&fp)){
 _te_("field "+f+" out of range [1.."+(int)_elts.count()+"]");
 		return(false);
@@ -3637,6 +3638,7 @@ cnst	c;
 	c.val[0]=0;
 	
 	if(c.idx==1){// first time
+//_tm_("c.idx="+c.idx);
 		if(kind!=0){
 			if(kind==_bit){
 				if((fp.kind!=_char)&&(fp.kind!=_int)){
@@ -3649,6 +3651,7 @@ _te_("bad field kind for bit constraint"+(UInt32*)&fp.cnstrkind);
 		else{
 			fp.cnstrkind=fp.kind;
 		}
+_tm_("nb_live="+nb_live());
 		if((nb_live()>0)&&(fp.cnstrkind!=_bit)){
 			if(fp.cnstrkind!=fp.kind){// Classe
 _tm_("classe");
@@ -3849,7 +3852,7 @@ void* buff=malloc(fp.size);
 	for(int i=1;i<=_objs->CountRecords();i++){
 //_tm_("%d",i);
 		if(_objs->RecordKilled(i)){
-_tm_("killed");
+//_tm_("killed");
 			continue;
 		}
 		_objs->ReadVal(i,f,buff);
@@ -3900,7 +3903,7 @@ char*		bbuf=(char*)buff;
 
 				}
 				if(memcmp(val,buff,fp.size)){
-//_tm_("default, memcmp failed");
+_tm_("default, memcmp failed");
 					free(buff);
 					return(false);
 				}

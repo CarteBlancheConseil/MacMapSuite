@@ -60,7 +60,7 @@ char	fpath[1024];
 	_feat=NULL;	
 	if(create){
 _tm_("mitab creation");
-		_mt=mitab_c_create(fpath,"mif","",__BOUNDS_MAX__,-__BOUNDS_MAX__,__BOUNDS_MAX__,-__BOUNDS_MAX__);
+        _mt=mitab_c_create(fpath,"mif","",__BOUNDS_MAX__,-__BOUNDS_MAX__,__BOUNDS_MAX__,-__BOUNDS_MAX__);
 		if(!_mt){
 _te_("creation of "+fpath+" failed");
 			*status=-1;

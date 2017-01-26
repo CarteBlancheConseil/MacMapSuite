@@ -380,6 +380,7 @@ ivertices	*vxs=NULL,*vbf=NULL;
 
 	vxs=ivs_new(_2D_VX,0,0);
 	ng=GEOSGetNumGeometries(collect);
+//fprintf(stderr,"geoscollect2vxs : %d\n",ng);
 	for(j=0;j<ng;j++){
 		ggmn=(GEOSGeometry*)GEOSGetGeometryN(collect,j);
 		if(!ggmn){
@@ -389,21 +390,21 @@ ivertices	*vxs=NULL,*vbf=NULL;
 			case GEOS_POLYGON:
 			case GEOS_MULTIPOLYGON:
 				vbf=geosxgon2vxs(ggmn);
-fprintf(stderr,"geosxgon2vxs\n");				
+//fprintf(stderr,"geosxgon2vxs\n");
 				break;
 			case GEOS_LINESTRING:
 			case GEOS_LINEARRING:
 			case GEOS_MULTILINESTRING:
 				vbf=geosxlin2vxs(ggmn);
-fprintf(stderr,"geosxlin2vxs\n");				
+//fprintf(stderr,"geosxlin2vxs\n");
 				break;
 			case GEOS_POINT:
 			case GEOS_MULTIPOINT:
 				vbf=geosxpoint2vxs(ggmn);
-fprintf(stderr,"geosxpoint2vxs\n");				
+//fprintf(stderr,"geosxpoint2vxs\n");
 				break;
 			default:
-fprintf(stderr,"default\n");				
+//fprintf(stderr,"default\n");
 				vbf=NULL;
 				break;
 		}

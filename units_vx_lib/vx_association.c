@@ -338,11 +338,22 @@ GEOSGeom ggmb=vxs2geosxlin(vsb);
 		return(NULL);
 	}
 GEOSGeom ggmr=GEOSIntersection(ggma,ggmb);
+    if(!ggmr){
+        GEOSGeom_destroy(ggma);
+        GEOSGeom_destroy(ggmb);
+        return(NULL);
+    }
+GEOSGeom ggmr2=GEOSLineMerge(ggmr);
+    if(ggmr2==NULL){
+fprintf(stderr,"(ggmr2==NULL)\n");
+    }
+    else{
+        GEOSGeom_destroy(ggmr);
+        ggmr=ggmr2;
+    }
 	GEOSGeom_destroy(ggma);
 	GEOSGeom_destroy(ggmb);
-	if(!ggmr){
-		return(NULL);
-	}
+
 ivertices*	vxs;
 	switch(GEOSGeomTypeId(ggmr)){
 		case GEOS_LINESTRING:
@@ -363,7 +374,6 @@ ivertices*	vxs;
 	GEOSGeom_destroy(ggmr);
 	return(vxs);
 }
-
 
 // ---------------------------------------------------------------------------
 // 
@@ -388,6 +398,75 @@ ivertices*	vxs=geosxgon2vxs(ggmr);
 	GEOSGeom_destroy(ggmr);
 	return(vxs);
 }
+
+// ---------------------------------------------------------------------------
+//
+// -----------
+ivertices* ivs_clip_line_in_surf(ivertices* lin, ivertices* gon){
+GEOSGeom ggma=vxs2geosxlin(lin);
+    if(!ggma){
+fprintf(stderr,"vxs2geosxlin returns NULL\n");
+        return(NULL);
+    }
+GEOSGeom ggmb=vxs2geosxgon(gon);
+    if(!ggmb){
+        GEOSGeom_destroy(ggma);
+fprintf(stderr,"vxs2geosxgon returns NULL\n");
+        return(NULL);
+    }
+    
+GEOSGeom ggmr=GEOSIntersection(ggma,ggmb);
+GEOSGeom ggmr2=GEOSLineMerge(ggmr);
+    if(ggmr2==NULL){
+fprintf(stderr,"(ggmr2==NULL)\n");
+    }
+    else{
+        GEOSGeom_destroy(ggmr);
+        ggmr=ggmr2;
+    }
+
+    GEOSGeom_destroy(ggma);
+    GEOSGeom_destroy(ggmb);
+    if(!ggmr){
+fprintf(stderr,"GEOSIntersection returns NULL\n");
+        return(NULL);
+    }
+//fprintf(stderr,"Geometry type=%d\n",GEOSGeomTypeId(ggmr));
+ivertices*	vxs=geoscollect2vxs(ggmr);
+    GEOSGeom_destroy(ggmr);
+    return(vxs);
+}
+
+// ---------------------------------------------------------------------------
+//
+// -----------
+ivertices* ivs_clip_line_out_surf(ivertices* lin, ivertices* gon){
+GEOSGeom ggma=vxs2geosxlin(lin);
+    if(!ggma){
+fprintf(stderr,"vxs2geosxlin returns NULL\n");
+        return(NULL);
+    }
+GEOSGeom ggmb=vxs2geosxgon(gon);
+    if(!ggmb){
+        GEOSGeom_destroy(ggma);
+fprintf(stderr,"vxs2geosxgon returns NULL\n");
+        return(NULL);
+    }
+    
+GEOSGeom ggmr=GEOSDifference(ggma,ggmb);
+    
+    GEOSGeom_destroy(ggma);
+    GEOSGeom_destroy(ggmb);
+    if(!ggmr){
+fprintf(stderr,"GEOSDifference returns NULL\n");
+        return(NULL);
+    }
+//fprintf(stderr,"Geometry type=%d\n",GEOSGeomTypeId(ggmr));
+ivertices*	vxs=geoscollect2vxs(ggmr);
+    GEOSGeom_destroy(ggmr);
+    return(vxs);
+}
+
 
 // ---------------------------------------------------------------------------
 // PB : Erreur si on a déjà une enveloppe convexe
@@ -675,18 +754,36 @@ ivertices*	vxs=geosxgon2vxs(ggmr);
 // 
 // -----------
 ivertices* ivs_split_surf_with_line(ivertices* gon, ivertices* lin){
-GEOSGeom ggma=vxs2geosxgon(gon);
+GEOSGeom ggma=vxs2geosxlin(gon);
 	if(!ggma){
 fprintf(stderr,"vxs2geosxgon returns NULL\n");
 		return(NULL);
 	}
-GEOSGeom ggmb=vxs2geosxlin(lin);
+GEOSGeom ggmb=vxs2geosxlin(lin);//vxs2geosxlin(lin);
 	if(!ggmb){
 		GEOSGeom_destroy(ggma);
 fprintf(stderr,"vxs2geosxlin returns NULL\n");
 		return(NULL);
 	}
-GEOSGeom ggmr=GEOSSymDifference(ggma,ggmb);
+//GEOSGeom ggmr=GEOSDifference(ggma,ggmb);
+    
+const GEOSGeometry* ggmp[2];
+    
+    ggmp[0]=GEOSIntersection(ggma,ggmb);
+    ggmp[1]=GEOSSymDifference(ggma,ggmb);
+    
+//GEOSGeom ggmr=GEOSPolygonize(ggmp,2);
+    
+
+//GEOSGeom ggmc=GEOSGeom_createCollection(GEOS_GEOMETRYCOLLECTION,ggmp,2);
+//GEOSGeom cuts,dangles,invalid;
+//GEOSGeom ggmr=GEOSPolygonize_full(ggmc,&cuts,&dangles,&invalid);
+   
+    ggmp[0]=ggma;
+    ggmp[1]=ggmb;
+    
+GEOSGeom ggmr=GEOSPolygonize(ggmp,2);
+    
 	GEOSGeom_destroy(ggma);
 	GEOSGeom_destroy(ggmb);
 	if(!ggmr){
@@ -698,6 +795,7 @@ ivertices*	vxs=geoscollect2vxs(ggmr);
 	GEOSGeom_destroy(ggmr);
 	return(vxs);
 }
+
 
 // ---------------------------------------------------------------------------
 //

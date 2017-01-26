@@ -304,3 +304,26 @@ d3dvertex*	p=dvs3_part(vin,part,&n);
 	return(0);
 }
 
+// ---------------------------------------------------------------------------
+//
+// -----------
+ivertices* nth_ivs(ivertices *vxs, long part){
+i2dvertex*  vxpart;
+int         nvx;
+ivertices*  res;
+    
+    vxpart=ivs2_part(vxs,part,&nvx);
+    if(vxpart==NULL){
+        return NULL;
+    }
+    if(nvx<=0){
+        return NULL;
+    }
+    res=ivs_new(_2D_VX,nvx,0);
+    if(res==NULL){
+        return NULL;
+    }
+    memmove(res->vx.vx2,vxpart,nvx*sizeof(i2dvertex));
+    return(res);
+}
+
