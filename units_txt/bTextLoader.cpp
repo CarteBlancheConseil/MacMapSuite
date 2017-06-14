@@ -28,7 +28,7 @@
 //----------------------------------------------------------------------------
 
 #include "bTextLoader.h"
-#include "bTrace.h"
+//#include "bTrace.h"
 
 // ---------------------------------------------------------------------------
 // Constructeur
@@ -309,6 +309,7 @@ int		c,flg=0,comp=0;
 		fseek(_fp,1,SEEK_CUR);
 	}
 	while((out=fgets(bbuff,bksz,_fp))){
+//_tm_("len 1");
 		len=strlen(bbuff);
 		if(len==0){
 			_eol=kEOLUnix;
@@ -380,11 +381,14 @@ int		c,flg=0,comp=0;
 		}
 	}
 	if(!out){
-		if(strlen(bbuff)>0){
+//_tm_("len 2");
+		if(bbuff&&strlen(bbuff)>0){
 			out=_lb;
 		}
 	}
-	
+//if(out){
+//_tm_(out);
+//}
 	return(out);
 }
 
