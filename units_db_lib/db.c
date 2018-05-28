@@ -1895,6 +1895,7 @@ ivertices*	vxs;
 					(*((ivertices**)val))=NULL;
 					return(0);
 				}
+//fprintf(stderr,"alloc %d\n",usz.sz);
 				vxs=(ivertices*)malloc(usz.sz);
 				if(!vxs){
 					(*((ivertices**)val))=NULL;

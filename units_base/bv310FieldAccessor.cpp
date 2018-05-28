@@ -143,7 +143,12 @@ int	bv310StaFieldAccessor::read(	int o,
 									void *val,
 									void* prm,
 									int(*rd_proc)(void*,int,int,void*)){
-	return(_tbl->ReadVal(o,f,val));
+_bTrace_("bv310StaFieldAccessor::read",false);
+int status=_tbl->ReadVal(o,f,val);
+    if(status){
+_te_("ReadVal failed with "+status+" for("+o+";"+f+")");
+    }
+	return status;
 }
 
 // ---------------------------------------------------------------------------
@@ -351,12 +356,13 @@ _te_("rd_proc failed");
 	}
 int k=_field_index.search(&_buff,_comp);
 	if(k==0){
-_te_("search failed");
+//_te_("search failed");
 		return(-2);
 	}
 	_field_index.get(k,&rx);
-	if(_tbl->ReadVal(rx.o,f,val)){
-_te_("ReadVal failed");
+int status=0;
+	if((status=_tbl->ReadVal(rx.o,f,val))){
+_te_("ReadVal failed with "+status+" for("+rx.o+";"+f+")");
 		return(-3);
 	}
 	return(0);

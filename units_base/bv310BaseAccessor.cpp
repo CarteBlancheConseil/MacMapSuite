@@ -247,7 +247,7 @@ _te_("field "+f+" out of range [1.."+(int)_elts.count()+"]");
 
 //_tm_("f=%d, fp.index=%d",f,fp.index);
 	if((status=fp.tbl->read(o,fp.index,val,this,static_read))){
-_te_("_objs->ReadVal failed with "+status+" for("+o+";"+fp.index+")");
+//_te_("_objs->ReadVal failed with "+status+" for("+o+";"+fp.index+")");
 		return(status);
 	}
 	if(f==kOBJ_ID_){
