@@ -432,7 +432,7 @@ fprintf(stderr,"ivx2_insert::bad sign (%d)\n",vxs->sign);
 		return(vxs);
 	}
 	if(eq_ivx2(&vxs->vx.vx2[idx],&bf)){
-fprintf(stderr,"ivx2_insert::equal points \n");
+//fprintf(stderr,"ivx2_insert::equal points \n");
 		return(vxs);
 	}
 	sz=(vxs->nv+1)*sizeof(i2dvertex);
