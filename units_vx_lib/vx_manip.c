@@ -105,8 +105,7 @@ i2dvertex	vx;
 // 
 // -----------
 void ivs_move(ivertices* vxs, int dx, int dy){
-int i;
-	for(i=0;i<vxs->nv;i++){
+	for(long i=0;i<vxs->nv;i++){
 		vxs->vx.vx2[i].h+=dx;
 		vxs->vx.vx2[i].v+=dy;
 	}
@@ -116,8 +115,7 @@ int i;
 // 
 // -----------
 void dvs_move(dvertices* vxs, double dx, double dy){
-int i;
-	for(i=0;i<vxs->nv;i++){
+	for(long i=0;i<vxs->nv;i++){
 		vxs->vx.vx2[i].x+=dx;
 		vxs->vx.vx2[i].y+=dy;
 	}

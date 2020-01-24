@@ -33,6 +33,7 @@
 //----------------------------------------------------------------------------
 
 #include "vx.h"
+#include <ctype.h>
 
 //----------------------------------------------------------------------------
 
@@ -59,7 +60,12 @@ int			ivssize		(	ivertices* vxs,
 							int* hSz, 
 							int* vSz, 
 							int* oSz);
-int			sizeofdvs2	(	int nv,	
+size_t      ivssize32   (   ivertices* vxs,
+                            int* hSz,
+                            int* vSz,
+                            int* oSz);
+
+int			sizeofdvs2	(	int nv,
 							int no);
 int			sizeofdvs3	(	int nv,	
 							int no);
@@ -70,7 +76,9 @@ int			dvssize		(	dvertices* vxs,
 
 int			ivs2ivs		(	ivertices* vin,	
 							ivertices**	vxs);
-int			dvs2dvs		(	dvertices* vin,	
+int			ivs2ivs32	(	ivertices* vin,
+                            ivertices32**	vxs);
+int			dvs2dvs		(	dvertices* vin,
 							dvertices**	vxs);
 int			ivr2ivs		(	ivx_rect* vr,
 							ivertices**	vxs);

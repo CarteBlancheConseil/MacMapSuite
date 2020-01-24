@@ -1,8 +1,0 @@
-- Prepare 64 bits support, specially for file format.
-- bv310FieldAccessor/bv310BaseAccessor : bugs using joined fields, need to test and fix it.
-- bMITABTable : avoid loading all mitab_feature when opening table. May be better to load only feature_ids.
-- bPGisTable : too slow, need to find a better way.
-
-
-Done :
-- WMSCapabilitiesParser : still uses CFXMLTree deprecated APIs, rewrite it with libxml2 library.

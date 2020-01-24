@@ -40,31 +40,30 @@
 //----------------------------------------------------------------------------
 
 class bString{
-	public:		
-		bString						(	const char* str);
-		virtual ~bString			(	);
+public:
+    bString						(	const char* str);
+    virtual ~bString			(	);
 
-		virtual const char* string	(	){return((const char*)_str);};
-		virtual bString& reset		(	);
-		
-		virtual bString& operator +	(	const char* str);
-		virtual bString& operator +	(	char x);
-		virtual bString& operator +	(	int x);
-		virtual bString& operator +	(	int* x);
-		virtual bString& operator +	(	unsigned int x);
-		virtual bString& operator +	(	unsigned int* x);
-		virtual bString& operator +	(	double x);
-		virtual bString& operator +	(	float x);
-		virtual bString& operator +	(	void* x);
-		virtual bString& operator +	(	long x);
-		virtual bString& operator +	(	bString& x);
-
-		
-	protected:
-		virtual void cat			(	const char* str);
-		
-	private:
-		char*	_str;
+    virtual const char* string	(	){return((const char*)_str);};
+    virtual bString& reset		(	);
+    
+    virtual bString& operator +	(	const char* str);
+    virtual bString& operator +	(	char x);
+    virtual bString& operator +	(	int x);
+    virtual bString& operator +	(	int* x);
+    virtual bString& operator +	(	unsigned int x);
+    virtual bString& operator +	(	unsigned int* x);
+    virtual bString& operator +	(	double x);
+    virtual bString& operator +	(	float x);
+    virtual bString& operator +	(	void* x);
+    virtual bString& operator +	(	long x);
+    virtual bString& operator +	(	bString& x);
+    
+protected:
+    virtual void cat			(	const char* str);
+    
+private:
+    char*	_str;
 };
 
 //----------------------------------------------------------------------------

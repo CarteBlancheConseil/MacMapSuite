@@ -61,7 +61,8 @@ enum{
 	kStringDouble=_double
 };
 
-#define	bmax	1024
+//#define	bmax	1024
+#define	bmax	SHRT_MAX
 
 //----------------------------------------------------------------------------
 

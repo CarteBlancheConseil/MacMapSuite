@@ -77,16 +77,18 @@ static void convertFromString(char* s, MEM_fld* f, void* v){
 //----------------------------------------------------------------------------
 // 
 //------------
-static size_t MEM_read(void *p, int f, int r, MEM_info* db){
-	memmove(p,(void*)(((int)db->flds[f].data)+(r*db->flds[f].sz)),db->flds[f].sz);
+static size_t MEM_read(void *p, long f, long r, MEM_info* db){
+    memmove(p,db->flds[f].data+r*db->flds[f].sz,db->flds[f].sz);
+//    memmove(p,(void*)(((int)db->flds[f].data)+(r*db->flds[f].sz)),db->flds[f].sz);
 	return(db->flds[f].sz);
 }
 
 //----------------------------------------------------------------------------
 // 
 //------------
-static size_t MEM_write(void *p, int f, int r, MEM_info* db){
-	memmove((void*)(((int)db->flds[f].data)+(r*db->flds[f].sz)),p,db->flds[f].sz);
+static size_t MEM_write(void *p, long f, long r, MEM_info* db){
+    memmove(db->flds[f].data+r*db->flds[f].sz,p,db->flds[f].sz);
+//    memmove((void*)(((int)db->flds[f].data)+(r*db->flds[f].sz)),p,db->flds[f].sz);
 	return(db->flds[f].sz);
 }
 
@@ -286,8 +288,8 @@ static int MEM_ChgFieldWithRecord(	MEM_info* db,
 									int length,
 									int decs){
 	
-int		i;
-int		nsz=MEM_CalcFieldSize(&db->flds[idx]);
+long	i;
+size_t	nsz=MEM_CalcFieldSize(&db->flds[idx]);
 void*	data=malloc(db->nRec*nsz);
 
 	if(!data){
@@ -300,32 +302,40 @@ void*	data=malloc(db->nRec*nsz);
 			case _int:
 				intToX(		sign,
 							0,
-							*(int*)(((int)db->flds[idx].data)+i*db->flds[idx].sz),
-							(void*)(((int)data)+i*nsz));
+							*(int*)(db->flds[idx].data+i*db->flds[idx].sz),
+							(void*)(data+i*nsz));
 				break;
 			case _double:
 				doubleToX(	sign,
 							0,
-							*(double*)(((int)db->flds[idx].data)+i*db->flds[idx].sz),
-							(void*)(((int)data)+i*nsz));
+                            *(double*)(db->flds[idx].data+i*db->flds[idx].sz),
+                            (void*)(data+i*nsz));
+                /**(double*)(((int)db->flds[idx].data)+i*db->flds[idx].sz),
+                (void*)(((int)data)+i*nsz));*/
 				break;
 			case _date:
 				dateToX(	sign,
 							0,
-							*(double*)(((int)db->flds[idx].data)+i*db->flds[idx].sz),
-							(void*)(((int)data)+i*nsz));
+                            *(double*)(db->flds[idx].data+i*db->flds[idx].sz),
+                            (void*)(data+i*nsz));
+                /**(double*)(((int)db->flds[idx].data)+i*db->flds[idx].sz),
+                (void*)(((int)data)+i*nsz));*/
 				break;
 			case _time:
 				timeToX(	sign,
 							0,
-							*(double*)(((int)db->flds[idx].data)+i*db->flds[idx].sz),
-							(void*)(((int)data)+i*nsz));
+                            *(double*)(db->flds[idx].data+i*db->flds[idx].sz),
+                            (void*)(data+i*nsz));
+                /**(double*)(((int)db->flds[idx].data)+i*db->flds[idx].sz),
+                (void*)(((int)data)+i*nsz));*/
 				break;
 			case _char:
 				charToX(	sign,
 							0,
-							(char*)(((int)db->flds[idx].data)+i*db->flds[idx].sz),
-							(void*)(((int)data)+i*nsz));
+                            (char*)(db->flds[idx].data+i*db->flds[idx].sz),
+                            (void*)(data+i*nsz));
+                /*(char*)(((int)db->flds[idx].data)+i*db->flds[idx].sz),
+                (void*)(((int)data)+i*nsz));*/
 				break;
 		}	
 	}
@@ -562,7 +572,7 @@ int	MEM_RmvField(MEM_info **db, int idx){
 	}
 		
 	if(idx<(*db)->nFld-1){
-		memmove(&(*db)->flds[idx],&(*db)->flds[idx+1],((*db)->nFld-(idx+1))*sizeof(MEM_fld));
+		memmove(&(*db)->flds[idx],&(*db)->flds[idx+1],((*db)->nFld-((long)idx+1))*sizeof(MEM_fld));
 	}
 	
 int	n=sizeof(MEM_info)+(((*db)->nFld-1)*sizeof(MEM_fld));
@@ -616,7 +626,8 @@ void*	buff;
 			}
 			db->flds[i].data=buff;
 			
-			memset((void*)(((int)db->flds[i].data)+((db->nRec)*db->flds[i].sz)),0,db->flds[i].sz);
+//            memset((void*)(((int)db->flds[i].data)+((db->nRec)*db->flds[i].sz)),0,db->flds[i].sz);
+            memset(db->flds[i].data+db->nRec*db->flds[i].sz,0,db->flds[i].sz);
 		}
 		db->nRec++;
 	}

@@ -30,6 +30,7 @@
 #include "valconv.h"
 #include "db_types.h"
 #include "db_utils.h"
+#include "C_Utils.h"
 #include <limits.h>
 #include <math.h>
 #include <stdio.h>

@@ -42,7 +42,7 @@
 
 //----------------------------------------------------------------------------
 
-typedef void (*swapper)	(int,int,void*);
+typedef void (*swapper)	(size_t,size_t,void*);
 
 //----------------------------------------------------------------------------
 
@@ -76,20 +76,19 @@ typedef struct DB_info{
 	int			nFld;		// nombre de champs
 	int			nRec;		// nombre d'enregistrements
 	
-	int			recSz;		// taille d'un enregistrement
-	int			dtOff;		// début des enregistrements
+	size_t		recSz;		// taille d'un enregistrement
+	size_t		dtOff;		// début des enregistrements
 	
-	int			fPos;		// position fichier du buffer de lecture ff
+	size_t		fPos;		// position fichier du buffer de lecture ff
 	void*		fBuff;		// buffer de lecture ff
-	int			uPos;		// position fichier du buffer de lecture fv
-//	int			aling64_1	// int d'alignement en x86_64
+	size_t		uPos;		// position fichier du buffer de lecture fv
 	void*		uBuff;		// buffer de lecture fv
 	
 	void*		emptyBuff;	// buffer d'init
 	
 	int			readOnly;	// base en lecture seule ou non
 	
-	int			rBuffSz;	// taille du buffer de lecture
+	size_t		rBuffSz;	// taille du buffer de lecture
 	
 	swapper		swproc;		// swapper big-endian <-> little-endian
 	
@@ -108,13 +107,59 @@ typedef struct DB_info{
 	int			reserved14;	// réservé
 	int			reserved15;	// réservé
 	int			reserved16;	// réservé
-//	int			aling64_2	// int d'alignement en x86_64
 	
 	FILE*		ff;			// le fichier des champs à largeur fixe
 	FILE*		fu;			// le fichier des champs à largeur variable
 		
 	DB_fld		flds[];		// les champs	
 }DB_info;
+
+// Descripteur de la table pour lecture 32bits
+typedef struct DB_info32{
+    int			spy;		// témoin de crash (inutilisé actuellement)
+    int			vers;		// version (inutilisé actuellement)
+    int			endian;		// environnement dans lequel a été créé la base
+    int			nFld;		// nombre de champs
+    int			nRec;		// nombre d'enregistrements
+    
+    int			recSz;		// taille d'un enregistrement
+    int			dtOff;		// début des enregistrements
+    
+    int			fPos;		// position fichier du buffer de lecture ff
+    int         fBuff;		// buffer de lecture ff
+    int			uPos;		// position fichier du buffer de lecture fv
+    int         uBuff;		// buffer de lecture fv
+    
+    int         emptyBuff;	// buffer d'init
+    
+    int			readOnly;	// base en lecture seule ou non
+    
+    int			rBuffSz;	// taille du buffer de lecture
+    
+    int         swproc;		// swapper big-endian <-> little-endian
+    
+    int			reserved2;	// réservé
+    int			reserved3;	// réservé
+    int			reserved4;	// réservé
+    int			reserved5;	// réservé
+    int			reserved6;	// réservé
+    int			reserved7;	// réservé
+    int			reserved8;	// réservé
+    int			reserved9;	// réservé
+    int			reserved10;	// réservé
+    int			reserved11;	// réservé
+    int			reserved12;	// réservé
+    int			reserved13;	// réservé
+    int			reserved14;	// réservé
+    int			reserved15;	// réservé
+    int			reserved16;	// réservé
+    
+    int         ff;			// le fichier des champs à largeur fixe
+    int         fu;			// le fichier des champs à largeur variable
+    
+    DB_fld		flds[];		// les champs	
+}DB_info32;
+
 
 typedef DB_info* DB_infop;
 
@@ -132,7 +177,7 @@ extern "C" {
 
 //----------------------------------------------------------------------------
 
-void		swapword			(	int sz, 
+void		swapword			(	size_t sz, 
 									void* word);
 
 DB_info*	DB_Create			(	const char* fName,

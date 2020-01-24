@@ -31,6 +31,7 @@
 #include "wtable.h"
 #include "mms_config.h"
 #include "C_Utils.h"
+//#include "bTrace.h"
 
 #include "bLocalDBTable.h"
 #include "bLocalOCDBTable.h"
@@ -74,45 +75,59 @@ wtable wtbl_alloc(	int signature,
 					double reso,
 					int srid,
 					int* status){
+//_bTrace_("wtbl_alloc",true);
 bStdTable*	tbl=NULL;
 	switch(signature){
 		case kTableLocalDBFU:
+            //_tm_("kTableLocalDBFU");
 			tbl=new bLocalDBTableFU(path,name,create,reso,srid,status);
 			break;
 		case kTableLocalDBNoFU:
+            //_tm_("kTableLocalDBNoFU");
 			tbl=new bLocalDBTableNoFU(path,name,create,reso,srid,status);
 			break;
 		case kTableMemDB:
+            //_tm_("kTableMemDB");
 			tbl=new bMemTable(path,name,create,reso,srid,status);
 			break;
 		case kTableShape:
+            //_tm_("kTableShape");
 			tbl=new bSHPTable(path,name,create,reso,srid,status);
 			break;
 		case kTableDBF:
+            //_tm_("kTableDBF");
 			tbl=new bDBFTable(path,name,create,reso,srid,status);
 			break;
 		case kTableMITAB:
+            //_tm_("kTableMITAB");
 			tbl=new bMITABTable(path,name,create,reso,srid,status);
 			break;
 		case kTablePostGIS:
+            //_tm_("kTablePostGIS");
 			tbl=new bPGisTable(path,name,create,reso,srid,status);
 			break;
 		case kTableTabText:
+            //_tm_("kTableTabText");
 			tbl=new bTextTabTable(path,name,create,reso,srid,status);
 			break;		
 		case kTableCSVText:
+            //_tm_("kTableCSVText");
 			tbl=new bTextCSVTable(path,name,create,reso,srid,status);
 			break;		
 		case kTableSQL:
+            //_tm_("kTableSQL");
 			tbl=new bSQLTable(path,name,create,reso,srid,status);
 			break;		
 		case kTableDXF:
+            //_tm_("kTableDXF");
 			tbl=new bTextDXFTable(path,name,create,reso,srid,status);
 			break;		
 		case kTableMMText:
+            //_tm_("kTableMMText");
 			tbl=new bTextMMTable(path,name,create,reso,srid,status);
 			break;		
 		default:
+//_te_("unknown signature "+signature);
 			*status=-1;
 			break;
 	}
@@ -132,6 +147,7 @@ wtable wtbl_falloc(	int signature,
 					int *tsrid,
 					int *asrid,
 					int* status){
+//_bTrace_("wtbl_falloc",true);
 bStdTable*	tbl=NULL;
 	switch(signature){
 		case kTableLocalDBFU:

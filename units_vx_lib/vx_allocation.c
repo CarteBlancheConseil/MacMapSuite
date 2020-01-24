@@ -84,6 +84,28 @@ int ivssize(ivertices* vxs, int* hSz, int* vSz, int* oSz){
 }
 
 // ---------------------------------------------------------------------------
+//
+// -----------
+size_t ivssize32(ivertices* vxs, int* hSz, int* vSz, int* oSz){
+    (*hSz)=(sizeof(ivertices32)-sizeof(i3dvertex));
+    (*oSz)=(vxs->no*sizeof(int));
+    if(vxs->sign==_2D_VX){
+        (*vSz)=(vxs->nv*sizeof(i2dvertex));
+        return((*hSz)+(*vSz)+(*oSz));
+    }
+    else if(vxs->sign==_3D_VX){
+        (*vSz)=(vxs->nv*sizeof(i3dvertex));
+        return((*hSz)+(*vSz)+(*oSz));
+    }
+    else{
+        (*hSz)=0;
+        (*vSz)=0;
+        (*oSz)=0;
+        return(0);
+    }
+}
+
+// ---------------------------------------------------------------------------
 // 
 // -----------
 int dvssize(dvertices* vxs, int* hSz, int* vSz, int* oSz){
@@ -109,19 +131,20 @@ int dvssize(dvertices* vxs, int* hSz, int* vSz, int* oSz){
 // 
 // -----------
 ivertices*	ivs_new(int kind, int nv, int no){
-int			sz=(kind==_2D_VX)?nv*sizeof(i2dvertex):nv*sizeof(i3dvertex);
+size_t		sz=(kind==_2D_VX)?(size_t)nv*sizeof(i2dvertex):(size_t)nv*sizeof(i3dvertex);
 ivertices*	vxs=(ivertices*)malloc((sizeof(ivertices)-sizeof(i3dvertex))+sz);
+
 	if(!vxs){
 		return(NULL);
 	}
 	(void)memset(vxs,0,(sizeof(ivertices)-sizeof(i3dvertex))+sz);
 	if(no>0){
-		vxs->offs=(int*)malloc(no*sizeof(int));
+		vxs->offs=(int*)malloc((size_t)no*sizeof(int));
 		if(!vxs->offs){
 			free(vxs);
 			return(NULL);
 		}
-		memset(vxs->offs,0,no*sizeof(int));
+		memset(vxs->offs,0,(size_t)no*sizeof(int));
 		vxs->no=no;
 	}
 	else{
@@ -151,19 +174,19 @@ void ivs_free(ivertices* vxs){
 // 
 // -----------
 dvertices*	dvs_new(int kind, int nv, int no){
-int			sz=(kind==_2D_VX)?nv*sizeof(d2dvertex):nv*sizeof(d3dvertex);
+size_t		sz=(kind==_2D_VX)?(size_t)nv*sizeof(d2dvertex):(size_t)nv*sizeof(d3dvertex);
 dvertices*	vxs=(dvertices*)malloc((sizeof(dvertices)-sizeof(d3dvertex))+sz);
 	if(!vxs){
 		return(NULL);
 	}
 	(void)memset(vxs,0,(sizeof(dvertices)-sizeof(d3dvertex))+sz);
 	if(no>0){
-		vxs->offs=(int*)malloc(no*sizeof(int));
+		vxs->offs=(int*)malloc((size_t)no*sizeof(int));
 		if(!vxs->offs){
 			free(vxs);
 			return(NULL);
 		}
-		memset(vxs->offs,0,no*sizeof(int));
+		memset(vxs->offs,0,(size_t)no*sizeof(int));
 		vxs->no=no;
 	}
 	else{
@@ -191,21 +214,79 @@ void dvs_free(dvertices* vxs){
 // ---------------------------------------------------------------------------
 // 
 // -----------
-int ivs2ivs(ivertices *vin, ivertices **vxs){	
+int ivs2ivs(ivertices *vin, ivertices **vxs){
+//fprintf(stderr,"ivs2ivs ---------->\n");
+
 	(*vxs)=ivs_new(vin->sign,vin->nv,vin->no);
+//fprintf(stderr,"ivs2ivs : %d|%d|%d\n",vin->sign,vin->nv,vin->no);
 	if(!(*vxs)){
 		return(-2);
 	}
 	if(vin->offs){
-		memmove((*vxs)->offs,vin->offs,vin->no*sizeof(int));
+//fprintf(stderr,"ivs2ivs : vin->offs :%lu\n",(vin->no*sizeof(int)));
+		memmove((*vxs)->offs,vin->offs,(size_t)vin->no*sizeof(int));
 	}
 	if(vin->sign==_2D_VX){
-		memmove((*vxs)->vx.vx2,&vin->vx.vx2,vin->nv*sizeof(i2dvertex));
+//fprintf(stderr,"ivs2ivs : _2D_VX :%lu\n",(vin->nv*sizeof(i2dvertex)));
+		memmove((*vxs)->vx.vx2,&vin->vx.vx2,(size_t)vin->nv*sizeof(i2dvertex));
 	}
 	else{
-		memmove((*vxs)->vx.vx3,vin->vx.vx3,vin->nv*sizeof(i3dvertex));
+//fprintf(stderr,"ivs2ivs : _3D_VX ???\n");
+		memmove((*vxs)->vx.vx3,vin->vx.vx3,(size_t)vin->nv*sizeof(i3dvertex));
 	}
+//fprintf(stderr,"ivs2ivs <----------\n",vin->sign,vin->nv,vin->no);
 	return(0);
+}
+
+// ---------------------------------------------------------------------------
+//
+// -----------
+int ivs2ivs32(ivertices *vin, ivertices32 **vxs){
+size_t  sz;
+    if(vin->sign==_2D_VX){
+        sz=(size_t)vin->nv*sizeof(i2dvertex);
+    }
+    else{
+        sz=(size_t)vin->nv*sizeof(i3dvertex);
+    }
+    *vxs=(ivertices32*)malloc((sizeof(ivertices32)-sizeof(i3dvertex))+sz+vin->no*sizeof(int));
+    if(!*vxs){
+        return(-1);
+    }
+    (void)memset((*vxs),0,(sizeof(ivertices32)-sizeof(i3dvertex))+sz+vin->no*sizeof(int));
+    /*if(vin->no>0){
+        *vxs->offs=(int*)malloc((size_t)vin->no*sizeof(int));
+        if(!*vxs->offs){
+            free(vxs);
+            return(NULL);
+        }
+        memset(vxs->offs,0,(size_t)no*sizeof(int));
+        vxs->no=no;
+    }
+    else{
+        vxs->offs=NULL;
+        vxs->no=0;
+    }*/
+    
+    (*vxs)->sign=vin->sign;
+    (*vxs)->nv=vin->nv;
+    (*vxs)->no=vin->no;
+    (*vxs)->offs=0;
+
+    if(vin->sign==_2D_VX){
+        memmove((*vxs)->vx.vx2,vin->vx.vx2,sz);
+        if(vin->no>0){
+            memmove((*vxs)->vx.vx2+sz,vin->offs,(size_t)vin->no*sizeof(int));
+        }
+    }
+    else{
+        memmove((*vxs)->vx.vx3,vin->vx.vx3,sz);
+        if(vin->no>0){
+            memmove((*vxs)->vx.vx3+sz,vin->offs,(size_t)vin->no*sizeof(int));
+        }
+    }
+
+    return(0);
 }
 
 // ---------------------------------------------------------------------------
@@ -244,7 +325,8 @@ int ivr2ivs(ivx_rect *vr, ivertices **vxs){
 	(*vxs)->vx.vx2[2].v=vr->top;
 	(*vxs)->vx.vx2[3].h=vr->left;
 	(*vxs)->vx.vx2[3].v=vr->top;
-	(*vxs)->vx.vx2[4]=(*vxs)->vx.vx2[0];
+    (*vxs)->vx.vx2[4].h=(*vxs)->vx.vx2[0].h;
+    (*vxs)->vx.vx2[4].v=(*vxs)->vx.vx2[0].v;
 	return(0);
 }
 

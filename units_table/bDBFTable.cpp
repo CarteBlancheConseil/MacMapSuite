@@ -44,7 +44,20 @@ _bTrace_("bDBFTable::bDBFTable",false);
 
 char	fpath[1024];
 	
-	sprintf(fpath,"%s%s",path,name);
+    *status=0;
+
+    sprintf(fpath,"%s%s",path,name);
+    
+    if(create){
+        _dbf=DBFCreate(fpath);
+        if(!_dbf){
+_te_("creation failed for : "+fpath);
+            *status=-1;
+            return;
+        }
+        return;
+    }
+    
 	_dbf=DBFOpen(fpath,"rb+");
 	if(!_dbf){
 		_dbf=DBFOpen(fpath,"rb");	
@@ -52,18 +65,9 @@ char	fpath[1024];
 	if(_dbf){
 		return;
 	}
-	if(!create){
-		*status=-1;
+
 _te_("table not found : "+fpath);
-		return;
-	}
-	_dbf=DBFCreate(fpath);
-	if(!_dbf){
-_te_("creation failed for : "+fpath);
-		*status=-1;
-		return;
-	}
-	*status=0;
+    *status=-1;
 }
 
 // ---------------------------------------------------------------------------
@@ -83,26 +87,30 @@ _bTrace_("bDBFTable::bDBFTable",false);
 
 char	fpath[1024];
 	
-	sprintf(fpath,"%s%s",path,name);
-	_dbf=DBFOpen(fpath,"rb+");
-	if(!_dbf){
-		_dbf=DBFOpen(fpath,"rb");	
-	}
-	if(_dbf){
-		return;
-	}
-	if(!create){
-		*status=-1;
-_te_("table not found : "+fpath);
-		return;
-	}
-	_dbf=DBFCreate(fpath);
-	if(!_dbf){
+    *status=0;
+
+    sprintf(fpath,"%s%s",path,name);
+        
+    if(create){
+        _dbf=DBFCreate(fpath);
+        if(!_dbf){
 _te_("creation failed for : "+fpath);
-		*status=-1;
-		return;
-	}
-	*status=0;
+            *status=-1;
+            return;
+        }
+        return;
+    }
+        
+    _dbf=DBFOpen(fpath,"rb+");
+    if(!_dbf){
+        _dbf=DBFOpen(fpath,"rb");
+    }
+    if(_dbf){
+        return;
+    }
+
+_te_("table not found : "+fpath);
+    *status=-1;
 }
 
 // ---------------------------------------------------------------------------

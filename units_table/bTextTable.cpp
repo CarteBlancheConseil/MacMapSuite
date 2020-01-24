@@ -226,7 +226,7 @@ int	bTextTable::WriteVal(	int o,
 // Trop dangereux de ne pas typer les champs !!!
 // -----------
 int	bTextTable::load(){
-//_bTrace_("bTextTable::load",true);
+_bTrace_("bTextTable::load",false);
 int		l,k,d;
 char	nm[256];
 
@@ -252,7 +252,7 @@ char	nm[256];
 		
 		sprintf(nm,"col%d",i+1);
 		if(AddField(nm,k,l,d)){
-//_te_("AddField "+nm+" failed");
+_te_("AddField "+nm+" failed");
 			return(-1);
 		}
 	}
@@ -265,6 +265,7 @@ char	nm[256];
 // 
 // -----------
 int	bTextTable::dump_to_mem(int o, int f, char* val, void* up){
+//_bTrace_("bTextTable::dump_to_mem",false);
 bTextTable*		t=(bTextTable*)up;
 int				k,l,d,s;
 
@@ -284,11 +285,16 @@ int				k,l,d,s;
 	if(!t->_loader->has_header()){
 		o++;
 	}
+//_tm_("malloc("+s+")");
 void*	r=malloc(s);
+//_tm_("charToX");
 	charToX(k,d,val,r);
+//_tm_("WriteVal");
 	if(t->WriteVal(o,f+1,r,true)){
 	}
+//_tm_("free");
 	free(r);
+//_tm_("ok");
 	return(0);
 }
 
@@ -474,7 +480,7 @@ bTextTabTable	::bTextTabTable(const char* path,
 	if(create){
 	}
 	else if(*status==0){
-		*status=load();
+        *status=load();
 	}
 }
 
@@ -623,7 +629,7 @@ bTextDXFTable	::bTextDXFTable(	const char* path,
 								reso,
 								srid,
 								status){
-_bTrace_("bTextDXFTable::bTextDXFTable",true);
+_bTrace_("bTextDXFTable::bTextDXFTable",false);
 	if(create){
 		if(CountFields()==0){
 			AddField("tag",_char,256,0);
@@ -656,7 +662,7 @@ bTextDXFTable	::bTextDXFTable(	const char* path,
 								tsrid,
 								asrid,
 								status){
-_bTrace_("bTextDXFTable::bTextDXFTable",true);
+_bTrace_("bTextDXFTable::bTextDXFTable",false);
 	if(create){
 		if(CountFields()==0){
 			AddField("tag",_char,256,0);
@@ -972,7 +978,7 @@ dvertices*	dvxs;
 	transform_a2t(dvxs);
 char*	txt=dvs2text(_gk,dvxs);	
 	if(txt){
-		fprintf(_fp,txt);
+		fprintf(_fp,"%s",txt);
 		free(txt);
 	}
 	dvs_free(dvxs);

@@ -156,8 +156,8 @@ bv310LDBBaseAccessor	::bv310LDBBaseAccessor(	const char* hpath,
 												const char* name,
 												const char* data)
 						:bv310BaseAccessor(hpath,status,kind,srid,reso,u2m,name,data,2){
-_bTrace_("bv310LDBBaseAccessor::bv310LDBBaseAccessor",false);
-char		fname[FILENAME_MAX];
+_bTrace_("bv310LDBBaseAccessor::bv310LDBBaseAccessor",true);
+char    fname[FILENAME_MAX];
 
 	for(;;){
 bStdDirectory	pkg(hpath);
@@ -171,6 +171,7 @@ bStdDirectory	cnt(fname);
 _te_("_hdr=(bStdTable*)wtbl_alloc failed with "+(*status));
 			break;
 		}
+        
 		sprintf(fname,"links");
 		*status=_fd;
 		_lnks=(bStdTable*)wtbl_alloc(kTableLocalDBNoFU,"",fname,true,_reso,-1,status);
@@ -188,6 +189,7 @@ _te_("_hdr=(bStdTable*)wtbl_alloc failed with "+(*status));
 _te_("_cnst=(bStdTable*)wtbl_alloc failed with "+(*status));
 			break;
 		}
+        
 		sprintf(fname,"fields");
 		*status=_fd;
 		_fld=(bStdTable*)wtbl_alloc(kTableLocalDBNoFU,"",fname,true,_reso,-1,status);
@@ -195,6 +197,7 @@ _te_("_cnst=(bStdTable*)wtbl_alloc failed with "+(*status));
 _te_("_fld=(bStdTable*)wtbl_alloc failed with "+(*status));
 			break;
 		}
+        
 		sprintf(fname,"objects");
 		*status=noErr;
 		_objs=(bStdTable*)wtbl_alloc(kTableLocalDBFU,"",fname,true,_reso,_srid,status);
@@ -202,7 +205,7 @@ _te_("_fld=(bStdTable*)wtbl_alloc failed with "+(*status));
 _te_("_objs=(bStdTable*)wtbl_alloc failed with "+(*status));
 			break;
 		}
-		
+        
 		if((*status=h_new(name))){
 _te_("h_new failed with "+(*status));
 			break;

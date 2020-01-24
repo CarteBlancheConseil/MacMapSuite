@@ -46,7 +46,7 @@ bString::bString(const char* str){
 // -----------
 bString::~bString(){
 	if(_str){
-		delete _str;
+		free((void*)_str);
 	}
 }
 
@@ -55,7 +55,7 @@ bString::~bString(){
 // ------------
 bString& bString::reset(){
 	if(_str){
-		delete _str;
+        free((void*)_str);
 		_str=NULL;
 	}
 	_str=(char*)malloc(1);
@@ -149,7 +149,7 @@ char	str[256];
 // ------------
 bString& bString::operator + (void* x){
 char	str[256];
-	sprintf(str,"%x",(int)x);
+	sprintf(str,"%lx",(long)x);
 	cat(str);
 	return(*this);
 }

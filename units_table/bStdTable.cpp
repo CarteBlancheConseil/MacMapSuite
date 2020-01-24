@@ -28,6 +28,7 @@
 //----------------------------------------------------------------------------
 
 #include "bStdTable.h"
+#include "bTrace.h"
 
 // ---------------------------------------------------------------------------
 // Constructeur
@@ -38,6 +39,7 @@ bStdTable::bStdTable(	double reso,
 						int tsrid,
 						int asrid,
 						int* status){
+//_bTrace_("bStdTable::bStdTable",true);
 	_reso=reso;
 	_ox=ox;
 	_oy=oy;

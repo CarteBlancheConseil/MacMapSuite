@@ -4,7 +4,7 @@
 // Purpose : C source file : DB_Lib (MacMap local database file format) allocation, deallocation, read, write
 // Author : Benoit Ogier, benoit.ogier@macmap.com
 //
-// Copyright (C) 1997-2015 Carte Blanche Conseil.
+// Copyright (C) 1997-2017 Carte Blanche Conseil.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
@@ -40,10 +40,62 @@
 #include "db_types.h"
 #include "db_utils.h"
 
+#include "valconv.h"
+
 //----------------------------------------------------------------------------
 
-//#define	fcpybufsz_	65536
 #define	fcpybufsz_	1048576
+
+//----------------------------------------------------------------------------
+#pragma mark =>Debug
+//----------------------------------------------------------------------------
+//
+//------------
+static void printFLD(DB_fld fld){
+    fprintf(stderr,"FLD sign : %d\n",fld.sign);
+    fprintf(stderr,"FLD fid : %d\n",fld.fid);
+    fprintf(stderr,"FLD nam : %s\n",fld.nam);
+    fprintf(stderr,"FLD attrs : %d\n",fld.attrs);
+    fprintf(stderr,"FLD length : %d\n",fld.length);
+    fprintf(stderr,"FLD decs : %d\n",fld.decs);
+    fprintf(stderr,"FLD sz : %d\n",fld.sz);
+    fprintf(stderr,"FLD off : %d\n",fld.off);
+}
+
+//----------------------------------------------------------------------------
+//
+//------------
+static void printDB(DB_info db){
+    fprintf(stderr,"DB spy : %d\n",db.spy);
+    fprintf(stderr,"DB vers : %d\n",db.vers);
+    fprintf(stderr,"DB endian : %d\n",db.endian);
+    fprintf(stderr,"DB nFld : %d\n",db.nFld);
+    fprintf(stderr,"DB nRec : %d\n",db.nRec);
+    fprintf(stderr,"DB recSz : %lu\n",db.recSz);
+    fprintf(stderr,"DB dtOff : %lu\n",db.dtOff);
+    fprintf(stderr,"DB fPos : %lu\n",db.fPos);
+    fprintf(stderr,"DB uPos : %lu\n",db.uPos);
+    fprintf(stderr,"DB readOnly : %d\n",db.readOnly);
+    fprintf(stderr,"DB rBuffSz : %lu\n",db.rBuffSz);
+}
+
+//----------------------------------------------------------------------------
+//
+//------------
+static void printDB32(DB_info32 db){
+    fprintf(stderr,"DB32 spy : %d\n",db.spy);
+    fprintf(stderr,"DB32 vers : %d\n",db.vers);
+    fprintf(stderr,"DB32 endian : %d\n",db.endian);
+    fprintf(stderr,"DB32 nFld : %d\n",db.nFld);
+    fprintf(stderr,"DB32 nRec : %d\n",db.nRec);
+    fprintf(stderr,"DB32 recSz : %d\n",db.recSz);
+    fprintf(stderr,"DB32 dtOff : %d\n",db.dtOff);
+    fprintf(stderr,"DB32 fPos : %d\n",db.fPos);
+    fprintf(stderr,"DB32 uPos : %d\n",db.uPos);
+    fprintf(stderr,"DB32 readOnly : %d\n",db.readOnly);
+    fprintf(stderr,"DB32 rBuffSz : %d\n",db.rBuffSz);
+}
+
 
 //----------------------------------------------------------------------------
 #pragma mark =>Utils
@@ -53,7 +105,8 @@
 // File duplication
 //------------
 static int filecpy(FILE *dst, FILE *src){
-int		i,szf,szb,pos;
+long    i;
+size_t  szf,szb,pos;
 void	*buff;
 
 	buff=malloc(fcpybufsz_);
@@ -63,8 +116,6 @@ fprintf(stderr,"filecpy::ERROR : malloc failed for %d\n",fcpybufsz_);
 	}
 
 	fflush(src);
-
-//	ftruncate(dst->_file,0);
 
 // FSEEK A MODIFIER
 	fseek(src,0,SEEK_END);
@@ -95,7 +146,7 @@ fprintf(stderr,"filecpy::ERROR : malloc failed for %d\n",fcpybufsz_);
 		if(szb>(szf-pos)){
 			szb=szf-pos;
 		}
-fprintf(stderr,"filecpy::%d processed (%.0f\%%)\n",i,(double)i/szf*100.0);
+fprintf(stderr,"filecpy::%ld processed (%.0f\%%)\n",i,(double)i/szf*100.0);
 	}
 	while(pos<szf);
 	
@@ -111,8 +162,7 @@ fprintf(stderr,"filecpy::%d processed (%.0f\%%)\n",i,(double)i/szf*100.0);
 // Fields offset shift
 //------------
 static void pushOffsets(DB_info* db, int from, int sz){
-int	i;	
-	for(i=from;i<db->nFld;i++){
+	for(long i=from;i<db->nFld;i++){
 		db->flds[i].off+=sz;
 	}
 }
@@ -173,11 +223,10 @@ static void convertFromString(char* s, DB_fld* f, void* v){
 //----------------------------------------------------------------------------
 // endian swap proc
 //------------
-void	swapword(int sz, void* word){
-int				i;
+void	swapword(size_t sz, void* word){
 unsigned char	buff;
 
-	for(i=0;i<sz/2;i++){
+	for(size_t i=0;i<sz/2;i++){
 		buff=((unsigned char*)word)[i];
 		((unsigned char*)word)[i]=((unsigned char*)word)[sz-i-1];
 		((unsigned char*)word)[sz-i-1]=buff;
@@ -187,17 +236,16 @@ unsigned char	buff;
 //----------------------------------------------------------------------------
 // endian swap proc
 //------------
-static void	swap(int sz, int n, void* arr){
-int	i;
-    for(i=0;i<n;i++){
-		swapword(sz,(void*)(((int)arr)+(i*sz)));
+static void	swap(size_t sz, size_t n, void* arr){
+    for(size_t i=0;i<n;i++){
+		swapword(sz,arr+i*sz);
     }
 }
 
 //----------------------------------------------------------------------------
 // no swap proc 
 //------------
-static void	dontswap(int sz, int n, void* arr){
+static void	dontswap(size_t sz, size_t n, void* arr){
 }
 
 //----------------------------------------------------------------------------
@@ -206,7 +254,7 @@ static void	dontswap(int sz, int n, void* arr){
 //----------------------------------------------------------------------------
 //
 //------------
-static void	DB_CheckEndian(DB_info* db){
+/*static void	DB_CheckEndian(DB_info* db){
 	if(db->endian!=1){
 //fprintf(stderr,"ENDIANNESS : Table need swap proc\n");
 		db->swproc=swap;
@@ -225,13 +273,49 @@ static void	DB_CheckEndian(DB_info* db){
 //fprintf(stderr,"ENDIANNESS : Table don't need swap proc\n");
 		db->swproc=dontswap;
 	}
+}*/
+
+//----------------------------------------------------------------------------
+//
+//------------
+static void DB32_CheckEndian(DB_info32* db32, DB_info* db){
+    if(db32->endian!=1){
+//fprintf(stderr,"ENDIANNESS : Table need swap proc\n");
+        swapword(sizeof(int),&db32->spy);
+        swapword(sizeof(int),&db32->vers);
+        swapword(sizeof(int),&db32->nFld);
+        swapword(sizeof(int),&db32->nRec);
+        swapword(sizeof(int),&db32->recSz);
+        swapword(sizeof(int),&db32->dtOff);
+        swapword(sizeof(int),&db32->fPos);
+        swapword(sizeof(int),&db32->uPos);
+        swapword(sizeof(int),&db32->readOnly);
+        swapword(sizeof(int),&db32->rBuffSz);
+        
+        db->swproc=swap;
+    }
+    else{
+//fprintf(stderr,"ENDIANNESS : Table don't need swap proc\n");
+        db->swproc=dontswap;
+    }
+    
+    db->spy=db32->spy;
+    db->vers=db32->vers;
+    db->nFld=db32->nFld;
+    db->nRec=db32->nRec;
+    db->recSz=db32->recSz;
+    db->dtOff=db32->dtOff;
+    db->fPos=db32->fPos;
+    db->uPos=db32->uPos;
+    db->readOnly=db32->readOnly;
+    db->rBuffSz=db32->rBuffSz;
 }
 
 //----------------------------------------------------------------------------
 //
 //------------
 static void	DB_CheckEndianFields(DB_info* db){
-int		i;
+long	i;
 	for(i=0;i<db->nFld;i++){
 //fprintf(stderr,"DB_CheckEndianFields %d\n",i);
 //fflush(stderr);
@@ -253,7 +337,7 @@ int		i;
 //
 //------------
 static void	DB_Swap(DB_info* db, int nFld){
-int		i;
+long	i;
 
 	(*(db->swproc))(sizeof(int),1,&db->spy);
 	(*(db->swproc))(sizeof(int),1,&db->vers);
@@ -303,6 +387,27 @@ static void	DB_Swap_ivx(DB_info* db, ivertices* vxs){
 			}
 			break;
 	}
+}
+
+//----------------------------------------------------------------------------
+//
+//------------
+static void	DB_Swap_ivx32(DB_info* db, ivertices32* vxs){
+    (*(db->swproc))(sizeof(int),3,vxs);
+    switch(vxs->sign){
+        case _2D_VX:
+            (*(db->swproc))(sizeof(int),vxs->nv*2L,vxs->vx.vx2);
+            if(vxs->no>0){
+                (*(db->swproc))(sizeof(int),vxs->no,&vxs->vx.vx2[vxs->nv]);
+            }
+            break;
+        case _3D_VX:
+            (*(db->swproc))(sizeof(int),vxs->nv*3L,vxs->vx.vx3);
+            if(vxs->no>0){
+                (*(db->swproc))(sizeof(int),vxs->no,&vxs->vx.vx3[vxs->nv]);
+            }
+            break;
+    }
 }
 
 //----------------------------------------------------------------------------
@@ -376,6 +481,84 @@ static void	DB_SwapAndBack_dvx(DB_info* db, dvertices* vxs, int sign, int nv, in
 //----------------------------------------------------------------------------
 // no endian needed
 //------------
+static int DB_writeHeader(DB_info* db){
+DB_info32   db32;
+FILE*       ff=db->ff;
+size_t      bkn=db->nFld;
+    
+    fseek(db->ff,0,SEEK_SET);
+
+    DB_Swap(db,bkn);
+
+    db32.spy=db->spy;
+    db32.vers=db->vers;
+    db32.endian=db->endian;
+    db32.nFld=db->nFld;
+    db32.nRec=db->nRec;
+    db32.recSz=db->recSz;
+    db32.dtOff=db->dtOff;
+    db32.fPos=db->fPos;
+    db32.fBuff=0;//db->fBuff;
+    db32.uPos=db->uPos;
+    db32.uBuff=0;//db->uBuff;
+    db32.emptyBuff=0;//db->emptyBuff;
+    db32.readOnly=db->readOnly;
+    db32.rBuffSz=db->rBuffSz;
+    db32.swproc=0;//db->swproc;
+    db32.reserved2=db->reserved2;
+    db32.reserved3=db->reserved3;
+    db32.reserved4=db->reserved4;
+    db32.reserved5=db->reserved5;
+    db32.reserved6=db->reserved6;
+    db32.reserved7=db->reserved7;
+    db32.reserved8=db->reserved8;
+    db32.reserved9=db->reserved9;
+    db32.reserved10=db->reserved10;
+    db32.reserved11=db->reserved11;
+    db32.reserved12=db->reserved12;
+    db32.reserved13=db->reserved13;
+    db32.reserved14=db->reserved14;
+    db32.reserved15=db->reserved15;
+    db32.reserved16=db->reserved16;
+    db32.ff=0;//db->ff;
+    db32.fu=0;//db->fu;
+    db32.spy=db->spy;
+    
+    if(db32.fPos<0){
+        db32.fPos=0;
+    }
+    if(db32.uPos<0){
+        db32.uPos=0;
+    }
+    
+    if(fwrite(&db32,sizeof(DB_info32),1,ff)!=1){
+        DB_Swap(db,bkn);
+        return(-40);
+    }
+    
+    if(fwrite(db->flds,bkn*sizeof(DB_fld),1,ff)!=1){
+        DB_Swap(db,bkn);
+        return(-41);
+    }
+    
+    DB_Swap(db,bkn);
+    return 0;
+}
+
+//----------------------------------------------------------------------------
+// no endian needed
+//------------
+static int DB_writeHeaderInFile(DB_info* db, FILE* fp){
+FILE* bkp=db->ff;
+    db->ff=fp;
+int status=DB_writeHeader(db);
+    db->ff=bkp;
+    return status;
+}
+
+//----------------------------------------------------------------------------
+// no endian needed
+//------------
 static size_t DB_fBuffLoad(int off, DB_info* db){
 int	eof,sz;
 	
@@ -421,7 +604,7 @@ int	eof,sz;
 // no endian needed
 //------------
 static size_t DB_fRead(void *p, int sz, int off, DB_info* db){	
-	if(sz<=db->rBuffSz){
+    if(sz<=db->rBuffSz){
 // on utilise le buffer pour accélérer la lecture des petits machins
 		if((off+sz)>(db->fPos+db->rBuffSz)){
 			DB_fBuffLoad(off,db);
@@ -429,7 +612,7 @@ static size_t DB_fRead(void *p, int sz, int off, DB_info* db){
 		else if(off<db->fPos){
 			DB_fBuffLoad(off,db);
 		}
-		memmove(p,(void*)(((int)db->fBuff)+(off-db->fPos)),sz);
+		memmove(p,(void*)db->fBuff+off-db->fPos,sz);
 	}
 	else{
 // pas la peine de se casser pour les gros, on lit tout d'un coup
@@ -452,7 +635,7 @@ static	size_t	DB_uRead(void	*p,	int	sz,	int	off,	DB_info* db){
 		else if(off<db->uPos){
 			DB_uBuffLoad(off,db);
 		}
-		memmove(p,(void*)(((int)db->uBuff)+(off-db->uPos)),sz);
+		memmove(p,(void*)db->uBuff+off-db->uPos,sz);
 	}
 	else{
 // pas la peine de se casser pour les gros, on lit tout d'un coup
@@ -495,7 +678,7 @@ size_t	k;
 	start-=db->fPos;
 	end-=db->fPos;
 	
-	memmove((void*)(((int)db->fBuff)+start),p,end-start);
+	memmove((void*)db->fBuff+start,p,end-start);
 	return(k);
 }
 
@@ -531,7 +714,7 @@ size_t	k;
 	start-=db->uPos;
 	end-=db->uPos;
 	
-	memmove((void*)(((int)db->uBuff)+start),p,end-start);
+	memmove((void*)db->uBuff+start,p,end-start);
 	return(k);
 }
 
@@ -539,9 +722,7 @@ size_t	k;
 // 
 //------------
 static int DB_fu(DB_info* db){
-int	i;
-	
-	for(i=0;i<db->nFld;i++){
+	for(long i=0;i<db->nFld;i++){
 		switch(db->flds[i].sign){
 			case _binary:
 			case _ivxs2:
@@ -641,7 +822,7 @@ DB_info*	db;
 		db->nRec=0;
 		db->nFld=0;
 		db->recSz=sizeof(int);
-		db->dtOff=sizeof(DB_info);
+        db->dtOff=sizeof(DB_info32);
 		db->fPos=0;
 		db->uPos=0;
 		db->rBuffSz=fcpybufsz_;
@@ -681,8 +862,8 @@ char*		fullName;
 int			n;
 FILE		*ff,*fu;
 DB_info*	db;
-//swapper		swp;
-	
+DB_info32	db32;
+    
 	for(;;){
 		db=DB_New();
 		if(!db){
@@ -723,11 +904,14 @@ DB_info*	db;
 		
 // FSEEK A MODIFIER
 		fseek(ff,0,SEEK_SET);
-		if(fread(db,sizeof(DB_info),1,ff)!=1){
+        
+        if(fread(&db32,sizeof(DB_info32),1,ff)!=1){
 fprintf(stderr,"DB_OpenH : fread db failed\n");
 			break;
 		}
-		DB_CheckEndian(db);
+        
+        DB32_CheckEndian(&db32,db);
+        
 		n=db->nFld;
 		if(n<0){
 fprintf(stderr,"DB_OpenH : bad nFld %d\n",n);
@@ -738,14 +922,17 @@ fprintf(stderr,"DB_OpenH : bad nFld %d\n",n);
 fprintf(stderr,"DB_OpenH : realloc failed\n");
 			break;
 		}
+        
 // FSEEK A MODIFIER
-		fseek(ff,0,SEEK_SET);
-		if(fread(db,sizeof(DB_info)+n*sizeof(DB_fld),1,ff)!=1){
+        fseek(ff,sizeof(DB_info32),SEEK_SET);
+        if(n>0){
+            if(fread(db->flds,n*sizeof(DB_fld),1,ff)!=1){
 fprintf(stderr,"DB_OpenH : fread db failed for %d fields\n",n);
-			break;
-		}
-		DB_CheckEndian(db);
-		DB_CheckEndianFields(db);		
+                break;
+            }
+        }
+        DB_CheckEndianFields(db);
+        
 		/*fu*/
 		if(use_fu==fuFit){
 			use_fu=DB_fu(db);
@@ -775,25 +962,23 @@ fprintf(stderr,"DB_OpenH : fread db failed for %d fields\n",n);
 			db->rBuffSz=fcpybufsz_;
 			db->fBuff=malloc(db->rBuffSz);
 			if(!db->fBuff){
-fprintf(stderr,"DB_OpenH : malloc failed for rBuffSz=%d\n",db->rBuffSz);
+fprintf(stderr,"DB_OpenH : malloc failed for rBuffSz=%lu\n",db->rBuffSz);
 				break;
 			}
 		}
 		/*fu*/
 		if(db->fu){
-		/*fu*/
 			db->uBuff=malloc(db->rBuffSz);
 			if(!db->uBuff){
-fprintf(stderr,"malloc failed for rBuffSz=%d\n",db->rBuffSz);
+fprintf(stderr,"malloc failed for rBuffSz=%lu\n",db->rBuffSz);
 				break;
 			}
-		/*fu*/
 		}
 		/*fu*/
 		
 		db->emptyBuff=malloc(db->recSz);
 		if(!db->emptyBuff){
-fprintf(stderr,"malloc failed for recSz=%d\n",db->recSz);
+fprintf(stderr,"malloc failed for recSz=%lu\n",db->recSz);
 			break;
 		}
 		memset(db->emptyBuff,0,db->recSz);
@@ -814,24 +999,18 @@ fprintf(stderr,"DB_OpenH : fwrite failed\n");
 			}
 			/*fu*/
 			if(db->fu){
-			/*fu*/
 				if(fwrite(&k,sizeof(int),1,db->fu)!=1){
 fprintf(stderr,"DB_OpenH : fwrite failed\n");
 					break;
 				}
-			/*fu*/
 			}
 			/*fu*/
 		}
 		
-//fprintf(stderr,"DB_OpenH : file fmt %d ok\n",db->ff->_file);
 		DB_fBuffLoad(db->dtOff,db);
 		/*fu*/
 		if(db->fu){
-		/*fu*/
 			DB_uBuffLoad(sizeof(int),db);
-//fprintf(stderr,"DB_OpenH : file unf %d ok\n",db->fu->_file);
-		/*fu*/
 		}
 		/*fu*/
 
@@ -933,18 +1112,16 @@ static int DB_AddFieldNoRec(	DB_info** db,
 								int decs){
 int	n=DB_AddFieldInStruct(db,nam,sign,length,decs);
 	if(n){
+fprintf(stderr,"DB_AddFieldNoRec : DB_AddFieldInStruct failed %d\n",n);
 		return(n);
 	}
-	n=sizeof(DB_info)+(((*db)->nFld)*sizeof(DB_fld));
-// FSEEK A MODIFIER
-	fseek((*db)->ff,0,SEEK_SET);
-int	bkn=(*db)->nFld;
-	DB_Swap(*db,bkn);
-	if(fwrite((*db),n,1,(*db)->ff)!=1){
-		DB_Swap(*db,bkn);
-		return(-4);
-	}
-	DB_Swap(*db,bkn);
+
+    n=DB_writeHeader(*db);
+    if(n){
+fprintf(stderr,"DB_AddFieldNoRec : DB_writeHeader failed %d\n",n);
+        return(n);
+    }
+    
 	return((*db)->nFld-1);
 }
 
@@ -957,12 +1134,11 @@ static int	DB_AddFieldWithRec(	DB_info** db,
 								int length,
 								int decs){
 FILE*	fp;
-int		i,n,oldsz,oldoff;
-char	tn[FILENAME_MAX];
-//long long		i;
+int		n;
+long    i;
+size_t  oldsz,oldoff;
 
-	tmpnam(tn);
-	fp=tmpfile();
+    fp=tmpfile();
 	if(!fp){
 		return(-3);
 	}
@@ -974,18 +1150,13 @@ char	tn[FILENAME_MAX];
 	if(n){
 		return(n);
 	}
-	
-	n=sizeof(DB_info)+(((*db)->nFld)*sizeof(DB_fld));
-// FSEEK A MODIFIER
-	fseek(fp,0,SEEK_SET);
-int	bkn=(*db)->nFld;
-	DB_Swap(*db,bkn);
-	if(fwrite((*db),n,1,fp)!=1){
-		DB_Swap(*db,bkn);
-		return(-4);
-	}
-	DB_Swap(*db,bkn);
-		
+    
+    n=DB_writeHeaderInFile(*db,fp);
+    if(n){
+fprintf(stderr,"DB_AddFieldWithRec : DB_writeHeaderInFile failed %d\n",n);
+        return(n);
+    }
+    
 	for(i=0;i<(*db)->nRec;i++){
 // FSEEK A MODIFIER
 		fseek((*db)->ff,oldoff+i*oldsz,SEEK_SET);
@@ -1044,17 +1215,13 @@ int	n=DB_RmvFieldFromStruct(db,idx);
 	if(n){
 		return(n);
 	}
-	
-	n=sizeof(DB_info)+(((*db)->nFld)*sizeof(DB_fld));
-// FSEEK A MODIFIER
-	fseek((*db)->ff,0,SEEK_SET);
-int	bkn=(*db)->nFld;
-	DB_Swap(*db,bkn);
-	if(fwrite((*db),n,1,(*db)->ff)!=1){
-		DB_Swap(*db,bkn);
-		return(-4);
-	}
-	DB_Swap(*db,bkn);
+    
+    n=DB_writeHeader(*db);
+    if(n){
+fprintf(stderr,"DB_RmvFieldNoRec : DB_writeHeader failed %d\n",n);
+        return(n);
+    }
+
 	return((*db)->nFld);
 }
 
@@ -1063,11 +1230,11 @@ int	bkn=(*db)->nFld;
 //------------
 static int DB_RmvFieldWithRec(DB_info** db, int idx){
 FILE*	fp;
-int		i,n,oldsz,oldoff,sz1,sz2,o2;
-char	tn[FILENAME_MAX];
+int		n;
+long    i;
 char*	buff;
-	
-	tmpnam(tn);
+size_t  oldsz,oldoff,sz1,sz2,o2;
+    
 	fp=tmpfile();
 	if(!fp){
 		return(-11);
@@ -1094,18 +1261,13 @@ char*	buff;
 	if(n){
 		return(n);
 	}
-	
-	n=sizeof(DB_info)+(((*db)->nFld)*sizeof(DB_fld));
-// FSEEK A MODIFIER
-	fseek(fp,0,SEEK_SET);
-int	bkn=(*db)->nFld;
-	DB_Swap(*db,bkn);
-	if(fwrite((*db),n,1,fp)!=1){
-		DB_Swap(*db,bkn);
-		return(-14);
-	}
-	DB_Swap(*db,bkn);
-	
+    
+    n=DB_writeHeaderInFile(*db,fp);
+    if(n){
+fprintf(stderr,"DB_RmvFieldWithRec : DB_writeHeaderInFile failed %d\n",n);
+        return(n);
+    }
+    
 	for(i=0;i<(*db)->nRec;i++){
 // FSEEK A MODIFIER
 		fseek((*db)->ff,oldoff+i*oldsz,SEEK_SET);
@@ -1286,17 +1448,12 @@ int	n=DB_ChgFieldInStruct(db,idx,nam,sign,length,decs);
 		return(n);
 	}
 	
-	n=sizeof(DB_info)+((db->nFld)*sizeof(DB_fld));
-// FSEEK A MODIFIER
-	fseek(db->ff,0,SEEK_SET);
-int	bkn=db->nFld;
-	DB_Swap(db,bkn);
-	if(fwrite(db,n,1,db->ff)!=1){
-		DB_Swap(db,bkn);
-		return(-4);
-	}
-	DB_Swap(db,bkn);
-	
+    n=DB_writeHeader(db);
+    if(n){
+fprintf(stderr,"DB_ChgFieldNoRec : DB_writeHeader failed %d\n",n);
+        return(n);
+    }
+
 	return(0);
 }
 
@@ -1310,13 +1467,13 @@ static int DB_ChgFieldWithRec(	DB_info* db,
 								int length,
 								int decs){
 FILE*	fp;
-int		i,n,oldsz,oldoff,sz1,sz2,o2,oldfsign,oldfsz;
-char	tn[FILENAME_MAX];
+int		n,oldfsign;
+long    i;
+size_t  oldsz,oldoff,sz1,sz2,o2,oldfsz;
 char	*buff;
 void*	bf;
 DB_fld	f;
 	
-	tmpnam(tn);
 	fp=tmpfile();
 	if(!fp){
 		return(-1);
@@ -1364,19 +1521,12 @@ DB_fld	f;
 	}
 	/**/
 	
-	n=sizeof(DB_info)+(db->nFld*sizeof(DB_fld));
-// FSEEK A MODIFIER
-	fseek(fp,0,SEEK_SET);
-int	bkn=db->nFld;
-	DB_Swap(db,bkn);
-	if(fwrite(db,n,1,fp)!=1){
-		DB_Swap(db,bkn);
-fprintf(stderr,"DB_ChgFieldWithRec : ERROR -4\n");
-fflush(stderr);
-		return(-4);
-	}
-	DB_Swap(db,bkn);
-	
+    n=DB_writeHeader(db);
+    if(n){
+fprintf(stderr,"DB_ChgFieldWithRec : DB_writeHeader failed %d\n",n);
+        return(n);
+    }
+
 	/**/
 	if((sign==oldfsign)&&(db->flds[idx].sz==oldfsz)){
 		free(buff);
@@ -1397,10 +1547,7 @@ fflush(stderr);
 		fseek(fp,db->dtOff+i*db->recSz,SEEK_SET);
 		
 		fwrite(buff,sz1,1,fp);
-		
-		//convertToString(buff+sz1,&f,tmp);
-		//convertFromString(tmp,&db->flds[idx],bf);
-		
+
 		/**/
 		switch(f.sign){
 			case _bool:
@@ -1522,11 +1669,11 @@ fprintf(stderr,"DB_Create : ERROR : fopen %s rb+ return NULL (%d)\n",fullName,er
 			break;
 		}
 		db->ff=fp;		
-//fprintf(stderr,"DB_Create : file fmt %d ok\n",db->ff->_file);
 		
 // FSEEK A MODIFIER
-		fseek(db->ff,0,SEEK_SET);
-		fwrite(db,sizeof(DB_info),1,db->ff);
+		/*fseek(db->ff,0,SEEK_SET);
+		fwrite(db,sizeof(DB_info),1,db->ff);*/
+        DB_writeHeader(db);
 		
 		fullName=(char*)malloc(strlen(fName)+5);
 		sprintf(fullName,"%s.unf",fName);
@@ -1555,16 +1702,11 @@ fprintf(stderr,"DB_Create : ERROR : fopen %s rb+ return NULL (%d)\n",fullName,er
 		}
 		/*fu*/
 		db->fu=fp;
-        if(db->fu){
-//fprintf(stderr,"DB_Create : file ufn %d ok\n",db->fu->_file);
-        }
         
 		DB_fBuffLoad(db->dtOff,db);
 		/*fu*/
 		if(db->fu){
-		/*fu*/
 			DB_uBuffLoad(sizeof(int),db);
-		/*fu*/
 		}
 		/*fu*/
 		return(db);
@@ -1664,8 +1806,7 @@ void DB_Close(DB_info* db){
 // no endian needed
 //------------
 int	DB_NamedFieldIdx(DB_info	*db, const char *nam, int *idx){		
-int	i;
-	for(i=0;i<db->nFld;i++){
+	for(long i=0;i<db->nFld;i++){
 		if(!strcmp(nam,db->flds[i].nam)){
 			(*idx)=i;
 			return(0);
@@ -1795,10 +1936,11 @@ int	DB_CountRecords(DB_info	*db){
 int	DB_AddField(DB_info	**db, const char*	nam, int sign, int length, int decs){
 int	status;	
 	if((*db)->readOnly){
-		return(-1);
+fprintf(stderr,"DB_AddField : readOnly\n");
+        return(-1);
 	}
-//fprintf(stderr,"%.4s\n",&sign);
 	if(!SignTest(sign)){
+fprintf(stderr,"DB_AddField : SignTest err\n");
 		return(-1);
 	}
 	if((*db)->nRec==0){
@@ -1807,6 +1949,9 @@ int	status;
 	else{
 		status=DB_AddFieldWithRec(db,nam,sign,length,decs);
 	}
+    if(status<0){
+fprintf(stderr,"DB_AddField : status = %d\n",status);
+    }
 	DB_fBuffLoad((*db)->dtOff,(*db));
 	return(status);
 }
@@ -1845,7 +1990,7 @@ int	x,index,status;
 // no endian needed
 //------------
 int	DB_RmvField(DB_info **db, int idx){
-	int	status;
+int	status;
 	
 	if((*db)->readOnly){
 fprintf(stderr,"DB_RmvField::ERROR : readOnly\n");		
@@ -1865,11 +2010,12 @@ fprintf(stderr,"DB_RmvField::ERROR : index out of range\n");
 	return(status);
 }
 
+
 //----------------------------------------------------------------------------
 // endian ok
 //------------
 int	DB_ReadVal(DB_info* db, int iRec, int iFld, void* val){
-int	off;
+size_t	off;
 	
 	if((iRec>=db->nRec)||(iRec<0)){
 		return(-1);
@@ -1878,12 +2024,13 @@ int	off;
 		return(-2);
 	}
 	off=db->dtOff+iRec*db->recSz+db->flds[iFld].off;
-			
+    
 	switch(db->flds[iFld].sign){
 		case _ivxs2:
 		case _ivxs3:{
-DB_usz		usz;
-ivertices*	vxs;
+DB_usz          usz;
+ivertices*      vxs;
+ivertices32*    vxs32;
 				/*fu*/
 				if(!db->fu){
 					return(-20);
@@ -1895,14 +2042,15 @@ ivertices*	vxs;
 					(*((ivertices**)val))=NULL;
 					return(0);
 				}
-				vxs=(ivertices*)malloc(usz.sz);
-				if(!vxs){
+				vxs32=(ivertices32*)malloc(usz.sz);
+				if(!vxs32){
 					(*((ivertices**)val))=NULL;
 					return(-1);
 				}
-				DB_uRead(vxs,usz.sz,usz.off,db);
-				DB_Swap_ivx(db,vxs);
-				vxs=ivs_unpack(vxs);
+				DB_uRead(vxs32,usz.sz,usz.off,db);
+				DB_Swap_ivx32(db,vxs32);
+				vxs=ivs_unpack32(vxs32);
+                free(vxs32);
 				(*((ivertices**)val))=vxs;
 			}
 			break;
@@ -2014,7 +2162,7 @@ void*		p;
 // endian ok
 //------------
 int	DB_WriteVal(DB_info	*db, int iRec, int iFld, void *val){
-int	off;
+size_t	off;
 	
 	if(db->readOnly){
 		return(-1);
@@ -2030,10 +2178,7 @@ int	off;
 		db->nRec++;
 // FSEEK A MODIFIER
 		fseek(db->ff,0,SEEK_SET);
-int	bkn=db->nFld;
-		DB_Swap(db,bkn);
-		fwrite(db,sizeof(DB_info),1,db->ff);
-		DB_Swap(db,bkn);
+        DB_writeHeader(db);
 		memset(db->emptyBuff,0,db->recSz);
 		DB_fWrite(db->emptyBuff,db->recSz,off,db);
 	}
@@ -2042,9 +2187,10 @@ int	bkn=db->nFld;
 	switch(db->flds[iFld].sign){
 		case _ivxs2:
 		case _ivxs3:{
-int			sz,h,v,o,bks,bkv,bko;
-DB_usz		usz;
-ivertices*	vxs;
+int             sz,h,v,o,bks,bkv,bko;
+DB_usz          usz;
+ivertices*      vxs;
+ivertices32*    vxs32;
 				/*fu*/
 				if(!db->fu){
 					return(-20);
@@ -2058,7 +2204,7 @@ ivertices*	vxs;
 				
 				DB_fRead(&usz,sizeof(DB_usz),off,db);
 				(*(db->swproc))(sizeof(int),2,&usz);
-				sz=ivssize(vxs,&h,&v,&o);
+				sz=ivssize32(vxs,&h,&v,&o);
 				if(sz>usz.sz){
 // FSEEK A MODIFIER
 					fseek(db->fu,0,SEEK_END);
@@ -2069,12 +2215,20 @@ ivertices*	vxs;
 					DB_fWrite(&usz,sizeof(DB_usz),off,db);
 					(*(db->swproc))(sizeof(int),2,&usz);
 				}
-				DB_SwapAndBack_ivx(db,vxs,bks,bkv,bko);
-				DB_uWrite(vxs,h+v,usz.off,db);
-				if(o>0){
-					DB_uWrite(vxs->offs,o,usz.off+h+v,db);
-				}
-				DB_SwapAndBack_ivx(db,vxs,bks,bkv,bko);
+            
+                if(!ivs2ivs32(vxs,&vxs32)){
+                    if(vxs->sign==_2D_VX){
+                        (*(db->swproc))(sizeof(int),4+vxs->nv*2+vxs->no,vxs32);
+                    }
+                    else{
+                        (*(db->swproc))(sizeof(int),4+vxs->nv*3+vxs->no,vxs32);
+                    }
+                    DB_uWrite(vxs32,h+v+o,usz.off,db);
+                    free(vxs32);
+                }
+                else{
+fprintf(stderr,"DB_WriteVal : ivs2ivs32 error\n");
+                }
 			}
 			break;
 			
@@ -2134,15 +2288,15 @@ ivertices*	vxs;
 			break;
 		
 		case _dvxs2:
-		case _dvxs3:{
+		case _dvxs3:/*{
 int			sz,h,v,o,bks,bkv,bko;
 DB_usz		usz;
 dvertices*	vxs;
-				/*fu*/
+				*//*fu*//*
 				if(!db->fu){
 					return(-20);
 				}
-				/*fu*/
+				*//*fu*//*
 				vxs=(*((dvertices**)val));
 
 				bks=vxs->sign;
@@ -2168,7 +2322,7 @@ dvertices*	vxs;
 					DB_uWrite(vxs->offs,o,usz.off+h+v,db);
 				}
 				DB_SwapAndBack_dvx(db,vxs,bks,bkv,bko);
-			}
+			}*/
 			break;
 		
 		case _binary:{
@@ -2232,7 +2386,6 @@ int	iVal;
 			break;
 		case _double:{
 double	dVal;
-				
 			r=DB_ReadVal(db,iRec,iFld,&dVal);
 			if(!r){
 				sprintf(val,"%.*f",db->flds[iFld].decs,dVal);		
@@ -2242,7 +2395,6 @@ double	dVal;
 		case _date:{
 time_t	t;
 double	dVal;
-				
 			r=DB_ReadVal(db,iRec,iFld,&dVal);
 			if(!r){
 				t=dVal;
@@ -2263,9 +2415,10 @@ double	dVal;
 // no endian
 //------------
 int	DB_WriteStringVal(DB_info* db, int iRec, int iFld, char *val){
-int	iVal,dVal,r;
-	
-	if((iRec>db->nRec)||(iRec<0)){
+int     iVal,r;
+double  dVal;
+
+    if((iRec>db->nRec)||(iRec<0)){
 		return(-1);
 	}
 	if((iFld>=db->nFld)||(iFld<0)){
@@ -2310,8 +2463,9 @@ int	off;
 	switch(db->flds[iFld].sign){
 		case _ivxs2:
 		case _ivxs3:{
-DB_usz		usz;
-ivertices*	vxs;
+DB_usz          usz;
+ivertices*      vxs;
+ivertices32*    vxs32;
 				/*fu*/
 				if(!db->fu){
 					return(-20);
@@ -2322,22 +2476,20 @@ ivertices*	vxs;
 				if(usz.sz==0){
 					return(0);
 				}
-				vxs=(ivertices*)malloc(usz.sz);
-				if(!vxs){
+				vxs32=(ivertices32*)malloc(usz.sz);
+				if(!vxs32){
 					return(-1);
 				}
-				DB_uRead(vxs,usz.sz,usz.off,db);
-				DB_Swap_ivx(db,vxs);
-				vxs=ivs_unpack(vxs);
+				DB_uRead(vxs32,usz.sz,usz.off,db);
+				DB_Swap_ivx32(db,vxs32);
+				vxs=ivs_unpack32(vxs32);
 				(*sz)=usz.sz;
 				(*val)=vxs;
 			}
 			break;
 			
 		case _char:{
-				int size;
-				
-				size=db->flds[iFld].length+1;
+int				size=db->flds[iFld].length+1;
 				(*val)=malloc(size);
 				if(!(*val)){
 					return(-1);
@@ -2435,14 +2587,14 @@ ivertices*	vxs;
 			break;
 
 		case _dvxs2:
-		case _dvxs3:{
+		case _dvxs3:/*{
 DB_usz		usz;
 dvertices*	vxs;
-				/*fu*/
+				*//*fu*//*
 				if(!db->fu){
 					return(-20);
 				}
-				/*fu*/
+				*//*fu*//*
 				DB_fRead(&usz,sizeof(DB_usz),off,db);
 				(*(db->swproc))(sizeof(int),2,&usz);
 				if(usz.sz==0){
@@ -2457,7 +2609,7 @@ dvertices*	vxs;
 				dvs_unpack(vxs);
 				(*sz)=usz.sz;
 				(*val)=vxs;
-			}
+			}*/
 			break;
 		
 		case _binary:{
@@ -2494,14 +2646,12 @@ void*		p;
 // endian ok
 //------------
 int	DB_KillRecord(DB_info* db, int iRec){
-int	k,off;
-	
 	if((iRec>=db->nRec)||(iRec<0)){
 		return(-1);
 	}
-	k=kDead_;
+int     k=kDead_;
 	(*(db->swproc))(sizeof(int),1,&k);
-	off=(db->dtOff)+((iRec*db->recSz));
+size_t  off=(db->dtOff)+((iRec*db->recSz));
 	DB_fWrite(&k,sizeof(int),off,db);
 	return(0);
 }
@@ -2510,14 +2660,12 @@ int	k,off;
 // endian ok
 //------------
 int	DB_UnkillRecord(DB_info	*db, int iRec){
-int	k,off;
-	
 	if((iRec>=db->nRec)||(iRec<0)){
 		return(-1);
 	}
-	k=kLive_;
+int     k=kLive_;
 	(*(db->swproc))(sizeof(int),1,&k);
-	off=(db->dtOff)+((iRec*db->recSz));
+size_t	off=(db->dtOff)+((iRec*db->recSz));
 	DB_fWrite(&k,sizeof(int),off,db);
 	return(0);
 }
@@ -2526,12 +2674,11 @@ int	k,off;
 // endian ok
 //------------
 int	DB_GetRecordState(DB_info	*db, int iRec){
-int	k,off;
-	
 	if((iRec>=db->nRec)||(iRec<0)){
 		return(-1);
 	}
-	off=(db->dtOff)+((iRec*db->recSz));
+size_t	off=(db->dtOff)+((iRec*db->recSz));
+int     k;
 	DB_fRead(&k,sizeof(int),off,db);
 	(*(db->swproc))(sizeof(int),1,&k);	
 	return(k);
@@ -2569,15 +2716,9 @@ void	*bf1,*bf2;
 	DB_fBuffLoad(db->fPos,db);
 	DB_uBuffLoad(db->uPos,db);
 	
-// FSEEK A MODIFIER
-	fseek(db->ff,0,SEEK_SET);
-int	bkn=db->nFld;
-	DB_Swap(db,bkn);
-	if(fwrite(db,sizeof(DB_info),1,db->ff)!=1){
-		DB_Swap(db,bkn);
-		return(-4);
-	}
-	DB_Swap(db,bkn);
+    if(DB_writeHeader(db)){
+        return(-4);
+    }
 // FSEEK A MODIFIER
 	fseek(db->ff,db->fPos,SEEK_SET);
 
@@ -2589,8 +2730,9 @@ int	bkn=db->nFld;
 //------------
 int	DB_Pack(DB_info	*db){
 FILE*	fp;
-int		i,j,n,newn=0,bkn,off,pos,count;
-char	tn[FILENAME_MAX];
+long	i,j;
+int     n,newn=0,count;
+size_t  off,pos;
 DB_usz	usz;
 void*	data;
 
@@ -2599,29 +2741,22 @@ fprintf(stderr,"----------------------------------------\n");
 fprintf(stderr,"DB_Pack : Packing formated data\n");
 fprintf(stderr,"----------------------------------------\n");
 
-	tmpnam(tn);
 	fp=tmpfile();
 	if(!fp){
 fprintf(stderr,"DB_Pack : ERROR : tmpfile failed\n");
 		return(-1);
 	}
 	
-	n=sizeof(DB_info)+(db->nFld*sizeof(DB_fld));
-// FSEEK A MODIFIER
-	fseek(fp,0,SEEK_SET);
-	bkn=db->nFld;
-	DB_Swap(db,bkn);
-	if(fwrite(db,n,1,fp)!=1){
-		DB_Swap(db,bkn);
-fprintf(stderr,"DB_Pack : ERROR : fwrite failed\n");
-		return(-2);
-	}
-	DB_Swap(db,bkn);
-	
+    n=DB_writeHeaderInFile(db,fp);
+    if(n){
+fprintf(stderr,"DB_Pack : DB_writeHeaderInFile failed %d\n",n);
+        return(-2);
+    }
+
 	count=0;
 	for(i=0;i<db->nRec;i++){
 		if(i%500==0){
-fprintf(stderr,"DB_Pack : %d of *.fmt processed (%.0f\%%)\n",i,(double)(i+1)/db->nRec*100.0);
+fprintf(stderr,"DB_Pack : %ld of *.fmt processed (%.0f\%%)\n",i,(double)(i+1)/db->nRec*100.0);
 		}
 		
 		if(DB_GetRecordState(db,i)==kDead_){
@@ -2643,17 +2778,12 @@ fprintf(stderr,"DB_Pack : %d of *.fmt processed (%.0f\%%)\n",i,(double)(i+1)/db-
 	memset(db->emptyBuff,0,db->recSz);	
 	
 	db->nRec=newn;
+    n=DB_writeHeaderInFile(db,fp);
+    if(n){
+fprintf(stderr,"DB_Pack : DB_writeHeaderInFile failed %d\n",n);
+        return(-2);
+    }
 
-// FSEEK A MODIFIER
-	fseek(fp,0,SEEK_SET);
-	DB_Swap(db,bkn);
-	if(fwrite(db,n,1,fp)!=1){
-		DB_Swap(db,bkn);
-fprintf(stderr,"DB_Pack : ERROR : fwrite failed\n");
-		return(-3);
-	}
-	DB_Swap(db,bkn);
-	
 	filecpy(db->ff,fp);		
 	fclose(fp);
 	
@@ -2672,7 +2802,6 @@ fprintf(stderr,"----------------------------------------\n");
 
 	DB_uBuffLoad(sizeof(int),db);
 
-	tmpnam(tn);
 	fp=tmpfile();
 	if(!fp){
 fprintf(stderr,"DB_Pack : ERROR : tmpfile failed\n");
@@ -2689,7 +2818,7 @@ fprintf(stderr,"DB_Pack : ERROR : tmpfile failed\n");
 	
 	for(i=0;i<db->nRec;i++){
 		if(i%500==0){
-fprintf(stderr,"DB_Pack : %d of *.unf processed (%.0f\%%)\n",i,(double)(i+1)/db->nRec*100.0);
+fprintf(stderr,"DB_Pack : %ld of *.unf processed (%.0f\%%)\n",i,(double)(i+1)/db->nRec*100.0);
 		}
 		for(j=0;j<db->nFld;j++){
 			switch(db->flds[j].sign){

@@ -43,14 +43,14 @@ typedef struct MEM_fld{
 	char		nam[64];	// nom
 	int			length;		// longueur utilisateur
 	int			decs;		// nb décimales (champs numériques)
-	int			sz;			// taille réelle
+	size_t		sz;			// taille réelle
 	void*		data;		// données
 }MEM_fld;
 
 // Descripteur de la table
 typedef struct MEM_info{
-	int			nFld;		// nombre de champs
-	int			nRec;		// nombre d'enregistrements
+	long		nFld;		// nombre de champs
+	long		nRec;		// nombre d'enregistrements
 	MEM_fld		flds[];		// les champs	
 }MEM_info;
 

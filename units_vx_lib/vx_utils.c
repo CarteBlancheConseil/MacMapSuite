@@ -994,6 +994,7 @@ int sz;
 ivertices* ivs_unpack(ivertices* vxs){
 int sz;
 	if(vxs->no<=0){
+        vxs->offs=NULL;
         return vxs;
 	}
 	vxs->offs=(int*)malloc(vxs->no*sizeof(int));
@@ -1007,6 +1008,37 @@ int sz;
 	}
 	sz=sizeofivs2(vxs->nv,0);
 	vxs=(ivertices*)realloc(vxs,sz);
+    return vxs;
+}
+
+// ---------------------------------------------------------------------------
+//
+// -----------
+ivertices* ivs_unpack32(ivertices32* vxs32){
+ivertices* vxs=ivs_new(vxs32->sign,vxs32->nv,vxs32->no);
+    switch(vxs->sign){
+        case _2D_VX:
+            memmove(vxs->vx.vx2,&vxs32->vx.vx2,vxs->nv*sizeof(i2dvertex));
+            break;
+        case _3D_VX:
+            memmove(vxs->vx.vx3,&vxs32->vx.vx3,vxs->nv*sizeof(i3dvertex));
+            break;
+    }
+    if(vxs32->no<=0){
+        vxs->offs=NULL;
+        return vxs;
+    }
+    vxs->offs=(int*)malloc(vxs->no*sizeof(int));
+    switch(vxs->sign){
+        case _2D_VX:
+            memmove(vxs->offs,&vxs32->vx.vx2[vxs->nv],vxs->no*sizeof(int));
+            break;
+        case _3D_VX:
+            memmove(vxs->offs,&vxs32->vx.vx3[vxs->nv],vxs->no*sizeof(int));
+            break;
+    }
+size_t    sz=sizeofivs2(vxs->nv,0);
+    vxs=(ivertices*)realloc(vxs,sz);
     return vxs;
 }
 

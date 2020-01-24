@@ -150,7 +150,7 @@ bv310BaseAccessor	::bv310BaseAccessor(const char* hpath,
 					,_elts(sizeof(field))
 					,_celts(sizeof(cnst))
 					,_tables(sizeof(bStdTable*)){
-_bTrace_("bv310BaseAccessor::bv310BaseAccessor (create)",_VERBOSE_);
+_bTrace_("bv310BaseAccessor::bv310BaseAccessor (create)",true);
 	*status=noErr;
 	_fid=0;
 	_oid=0;
@@ -247,7 +247,7 @@ _te_("field "+f+" out of range [1.."+(int)_elts.count()+"]");
 
 //_tm_("f=%d, fp.index=%d",f,fp.index);
 	if((status=fp.tbl->read(o,fp.index,val,this,static_read))){
-_te_("_objs->ReadVal failed with "+status+" for("+o+";"+fp.index+")");
+//_te_("_objs->ReadVal failed with "+status+" for("+o+";"+fp.index+")");
 		return(status);
 	}
 	if(f==kOBJ_ID_){
@@ -1826,7 +1826,7 @@ int 	k=1;
 	fld_write(	k, 
 				-3,
 				_date,
-				sizeof(double),
+                sizeof(double),
 				30,
 				0,
 				state,
@@ -1858,7 +1858,7 @@ int 	k=1;
 	fld_write(	k, 
 				-5,
 				_date,
-				sizeof(double),
+                sizeof(double),
 				30,
 				0,
 				state,
@@ -2763,6 +2763,7 @@ _te_("_fld->WriteVal(i,kFLD_index_,&f.index) failed");
 		}
 		
 		if((status=_fld->ReadVal(i,kFLD_tbl_id_,&f.tbl_id))){
+_tw_("ReadVal failed for kFLD_tbl_id_");
 			break;
 		}
 		if(f.tbl_id==0){
@@ -2781,6 +2782,8 @@ _te_("linked table "+f.tbl_id+" not found for field "+f.name);
 		//	continue;
 		}
 		
+_tm_(i+" / "+f.name+" id="+f.fid);
+        
 		if(!_elts.add(&f)){
 			status=-1;
 			break;
@@ -2818,10 +2821,11 @@ field	f;
 _te_("_cnst->ReadVal("+i+","+kCNST_fid_+",x)");
 			return(-1);
 		}
+_tm_("constraint "+i+", field id="+c.fid);
 		f.fid=c.fid;
 		k=_elts.search(&f,field_comp);
 		if(!k){
-_tm_("field "+c.fid+" not found, constraint deleted");
+_tw_("field "+c.fid+" not found, constraint deleted");
 			_cnst->KillRecord(i);
 			continue;
 		}
@@ -3858,7 +3862,7 @@ void* buff=malloc(fp.size);
 		_objs->ReadVal(i,f,buff);
 		switch(fp.kind){
 			case _binary:{
-void*	bbuff=(void*)(*(int*)buff);
+void*	bbuff=(void*)(*(long*)buff);
 				if(memcmp(val,bbuff,fp.size)){
 					free(bbuff);
 					return(false);
@@ -3867,7 +3871,7 @@ void*	bbuff=(void*)(*(int*)buff);
 			}	break;
 			case _ivxs2:
 			case _ivxs3:{
-ivertices*	bbuff=(ivertices*)(*(int*)buff);
+ivertices*	bbuff=(ivertices*)(*(long*)buff);
 				if(memcmp(val,bbuff,fp.size)){
 					ivs_free(bbuff);
 //					free(buff);
@@ -3877,7 +3881,7 @@ ivertices*	bbuff=(ivertices*)(*(int*)buff);
 			}	break;
 			case _dvxs2:
 			case _dvxs3:{
-dvertices*	bbuff=(dvertices*)(*(int*)buff);
+dvertices*	bbuff=(dvertices*)(*(long*)buff);
 				if(memcmp(val,bbuff,fp.size)){
 					dvs_free(bbuff);
 //					free(buff);

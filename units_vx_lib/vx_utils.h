@@ -183,6 +183,8 @@ d3dvertex*	dvs3_part		(	dvertices* vxs,
 
 
 ivertices*	ivs_pack		(	ivertices* vxs);
+ivertices*  ivs_unpack32    (   ivertices32* vxs32);
+
 ivertices*	ivs_unpack		(	ivertices* vxs);
 dvertices*	dvs_pack		(	dvertices* vxs);
 dvertices*	dvs_unpack		(	dvertices* vxs);

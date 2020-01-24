@@ -87,6 +87,7 @@
 		146B87F91B7BA02300D80C86 /* proj_api.h in Headers */ = {isa = PBXBuildFile; fileRef = 146B87F31B7BA02300D80C86 /* proj_api.h */; };
 		146B87FA1B7BA02300D80C86 /* projects.h in Headers */ = {isa = PBXBuildFile; fileRef = 146B87F41B7BA02300D80C86 /* projects.h */; };
 		146B87FC1B7BA0D400D80C86 /* export.h in Headers */ = {isa = PBXBuildFile; fileRef = 146B87FB1B7BA0D400D80C86 /* export.h */; };
+		1477AF422304507400C010F4 /* postgres_ext.h in Headers */ = {isa = PBXBuildFile; fileRef = 1477AF412304507400C010F4 /* postgres_ext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		147E6D711B7CD8E4001BD909 /* libmitab-1.0.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 147E6D701B7CD8E4001BD909 /* libmitab-1.0.1.dylib */; };
 		147E6D731B7CD902001BD909 /* mitab_capi.h in Headers */ = {isa = PBXBuildFile; fileRef = 147E6D721B7CD902001BD909 /* mitab_capi.h */; };
 		149816250D92B6DA00803F89 /* MacMapSuite_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 149816240D92B6DA00803F89 /* MacMapSuite_Prefix.pch */; };
@@ -217,6 +218,7 @@
 		146B87F31B7BA02300D80C86 /* proj_api.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = proj_api.h; path = UXLibs/unix/include/proj_api.h; sourceTree = SOURCE_ROOT; };
 		146B87F41B7BA02300D80C86 /* projects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = projects.h; path = UXLibs/unix/include/projects.h; sourceTree = SOURCE_ROOT; };
 		146B87FB1B7BA0D400D80C86 /* export.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = export.h; path = UXLibs/unix/include/geos/export.h; sourceTree = SOURCE_ROOT; };
+		1477AF412304507400C010F4 /* postgres_ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = postgres_ext.h; path = UXLibs/unix/include/postgres_ext.h; sourceTree = SOURCE_ROOT; };
 		147E6D701B7CD8E4001BD909 /* libmitab-1.0.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libmitab-1.0.1.dylib"; path = "unix/lib/libmitab-1.0.1.dylib"; sourceTree = "<group>"; };
 		147E6D721B7CD902001BD909 /* mitab_capi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mitab_capi.h; path = UXLibs/unix/include/mitab_capi.h; sourceTree = SOURCE_ROOT; };
 		149816240D92B6DA00803F89 /* MacMapSuite_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = MacMapSuite_Prefix.pch; sourceTree = "<group>"; };
@@ -457,6 +459,7 @@
 		146359361B0379890006EB54 /* include */ = {
 			isa = PBXGroup;
 			children = (
+				1477AF412304507400C010F4 /* postgres_ext.h */,
 				14BFF4451B84CF500022F7D0 /* libpq-fe.h */,
 				147E6D721B7CD902001BD909 /* mitab_capi.h */,
 				146B87FB1B7BA0D400D80C86 /* export.h */,
@@ -747,6 +750,7 @@
 				1463B49C097C06DE00FB5653 /* vx_lib.h in Headers */,
 				146B87F71B7BA02300D80C86 /* nad_list.h in Headers */,
 				146B87F81B7BA02300D80C86 /* org_proj4_Projections.h in Headers */,
+				1477AF422304507400C010F4 /* postgres_ext.h in Headers */,
 				1463B49E097C06DE00FB5653 /* vx_manip.h in Headers */,
 				1463B4A0097C06DE00FB5653 /* vx_measure.h in Headers */,
 				1463B4A2097C06DE00FB5653 /* vx_utils.h in Headers */,
@@ -972,7 +976,7 @@
 		1499A0E6097B758F00DA8347 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)";
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
@@ -1006,7 +1010,7 @@
 				MACH_O_TYPE = mh_dylib;
 				OBJROOT = build;
 				PRODUCT_NAME = MacMapSuite;
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx10.12;
 				SYMROOT = build;
 				WRAPPER_EXTENSION = framework;
 				ZERO_LINK = NO;
@@ -1016,14 +1020,14 @@
 		1499A0EA097B758F00DA8347 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				LINK_WITH_STANDARD_LIBRARIES = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OBJROOT = build;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = NO;
 				PREBINDING = NO;
 				PRELINK_LIBS = "";
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx10.12;
 			};
 			name = Release;
 		};

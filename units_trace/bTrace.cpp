@@ -153,10 +153,10 @@ bool bTrace::get_flush(){
 // ---------------------------------------------------------------------------
 // 
 // ------------
-void bTrace::indent(){	
+void bTrace::indent(){
+    //fprintf(_fp,"%012d>",(int)clock());
 	fprintf(_fp,">");
-
-	for(int i=0;i<_indent;i++){
+    for(int i=0;i<_indent;i++){
 		fprintf(_fp,"\t");
 	}
 }
@@ -166,8 +166,9 @@ void bTrace::indent(){
 // ------------
 void bTrace::wtime(){
 time_t	t=time(NULL);
-char*	c=asctime(localtime(&t));
-	fprintf(_fp,">%s",c);
+/*char*	c=asctime(localtime(&t));*/
+	fprintf(_fp,">%s",ctime(&t));
+//    fprintf(_fp,"%s>",ctime(&t));
 }
 
 // ---------------------------------------------------------------------------
@@ -230,7 +231,8 @@ void bTrace::err(bString& str){
 	if(!_on){
 		return;
 	}	
-	fprintf(_fp,">!!! ERROR ");	
+    //indent();
+	fprintf(_fp,"  !!! ERROR ");
 	if(_fct[0]){
 		fprintf(_fp,"in ");
 		fprintf(_fp,"%s",_fct);
@@ -252,7 +254,7 @@ void bTrace::msg(bString& str){
 	}
 	indent();
 	if(_fct[0]){
-		fprintf(_fp,"%s",_fct);
+		fprintf(_fp,"  %s",_fct);
 		fprintf(_fp," : ");
 	}
 	fprintf(_fp,"%s",str.string());
@@ -269,7 +271,8 @@ void bTrace::wrn(bString& str){
 	if(!_on){
 		return;
 	}	
-	fprintf(_fp,">!!! WARNING ");	
+    //indent();
+	fprintf(_fp,"  !!! WARNING ");
 	if(_fct[0]){
 		fprintf(_fp,"in ");
 		fprintf(_fp,"%s",_fct);

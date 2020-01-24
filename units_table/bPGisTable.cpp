@@ -321,7 +321,7 @@ _bTrace_("bPGisTable::AddField",false);
 int		expect=PGRES_COMMAND_OK;
 
 char	namutf8[1024];
-	sprintf(namutf8,nam);
+	sprintf(namutf8,"%s",nam);
 	MacRoman2UTF8(namutf8,sizeof(namutf8)-1);
 	
 	switch(sign){

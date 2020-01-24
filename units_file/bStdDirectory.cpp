@@ -405,7 +405,7 @@ void bStdUTF8Directory::name(int idx, char* name){
 		name[0]=0;
 		return;
 	}
-	sprintf(name,_names[idx-1]->d_name);
+	sprintf(name,"%s",_names[idx-1]->d_name);
 }
 
 // ---------------------------------------------------------------------------

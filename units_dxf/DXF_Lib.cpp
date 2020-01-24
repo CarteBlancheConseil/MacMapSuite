@@ -2064,7 +2064,6 @@ VERTEX_Rec	NullVertex;
 static int	DXF_ReadEndBlock(DXF_Handle DXF){
 	do{
 		DXF_ReadTag(DXF);
-		DXF->tag.err;
 	}
 	while ((!DXF->tag.err)&&(DXF->tag.cod!=___0)&&(!DXF->tag.last));
 	return(DXF->tag.err);

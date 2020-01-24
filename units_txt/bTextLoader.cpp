@@ -28,7 +28,7 @@
 //----------------------------------------------------------------------------
 
 #include "bTextLoader.h"
-#include "bTrace.h"
+//#include "bTrace.h"
 
 // ---------------------------------------------------------------------------
 // Constructeur
@@ -140,14 +140,14 @@ int		i,j,status=0;
 // Dummy hash
 // -----------
 void bTextLoader::hash(){
-//_bTrace_("bTextLoader::hash",true);
+//_bTrace_("bTextLoader::hash",false);
 }
 
 // ---------------------------------------------------------------------------
 // 
 // -----------
 void bTextLoader::analyse(){
-//_bTrace_("bTextLoader::analyse",true);
+//_bTrace_("bTextLoader::analyse",false);
 int		i,k;
 
 	while(true){
@@ -273,7 +273,7 @@ char*	cbad=NULL;
 // 
 // -----------
 char* bTextLoader::get_text(int n){
-//_bTrace_("bTextLoader::get_text",true);
+//_bTrace_("bTextLoader::get_text",false);
 char*    tmp;
 	if(_hsh[n].len>=_sbsz){
 		if(_hsh[n].len>=bmax){
@@ -284,7 +284,7 @@ char*    tmp;
 		}
 		tmp=(char*)realloc(_sb,_sbsz);
 		if(!tmp){
-//_te_("realloc failed "+_sbsz);		
+//_te_("realloc failed "+_sbsz);
 		}
         else{
             _sb=tmp;
@@ -292,6 +292,7 @@ char*    tmp;
 	}
 	strncpy(_sb,&_lb[_hsh[n].start],_hsh[n].len);
 	_sb[_hsh[n].len]=0;
+//_tm_(_sb);
 	return(_sb);
 }
 
@@ -299,7 +300,7 @@ char*    tmp;
 // 
 // -----------
 char* bTextLoader::get_line(){
-//_bTrace_("bTextLoader::get_line",true);
+//_bTrace_("bTextLoader::get_line",false);
 int		i,len;
 int		bksz=_lbsz;
 char*	bbuff=_lb,*out;
@@ -309,6 +310,7 @@ int		c,flg=0,comp=0;
 		fseek(_fp,1,SEEK_CUR);
 	}
 	while((out=fgets(bbuff,bksz,_fp))){
+//_tm_("len 1");
 		len=strlen(bbuff);
 		if(len==0){
 			_eol=kEOLUnix;
@@ -380,11 +382,14 @@ int		c,flg=0,comp=0;
 		}
 	}
 	if(!out){
-		if(strlen(bbuff)>0){
+//_tm_("len 2");
+		if(bbuff&&strlen(bbuff)>0){
 			out=_lb;
 		}
 	}
-	
+//if(out){
+//_tm_(out);
+//}
 	return(out);
 }
 
@@ -409,7 +414,7 @@ bDelimitedTextLoader::~bDelimitedTextLoader(){
 // 
 // -----------
 void bDelimitedTextLoader::hash(){
-//_bTrace_("bDelimitedTextLoader::hash",true);
+//_bTrace_("bDelimitedTextLoader::hash",false);
 int		k=0;
 bool	chropen=false;
 

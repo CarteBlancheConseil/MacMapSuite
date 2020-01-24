@@ -2513,7 +2513,7 @@ void* buff=malloc(fp.size);
 		_objs->ReadVal(i,f,buff);
 		switch(fp.kind){
 			case _binary:{
-void*	bbuff=(void*)(*(int*)buff);
+void*	bbuff=(void*)(*(long*)buff);
 				if(memcmp(val,bbuff,fp.size)){
 					free(bbuff);
 					free(buff);
@@ -2523,7 +2523,7 @@ void*	bbuff=(void*)(*(int*)buff);
 			}	break;
 			case _ivxs2:
 			case _ivxs3:{
-ivertices*	bbuff=(ivertices*)(*(int*)buff);
+ivertices*	bbuff=(ivertices*)(*(long*)buff);
 				if(memcmp(val,bbuff,fp.size)){
 					ivs_free(bbuff);
 					free(buff);
@@ -2533,7 +2533,7 @@ ivertices*	bbuff=(ivertices*)(*(int*)buff);
 			}	break;
 			case _dvxs2:
 			case _dvxs3:{
-dvertices*	bbuff=(dvertices*)(*(int*)buff);
+dvertices*	bbuff=(dvertices*)(*(long*)buff);
 				if(memcmp(val,bbuff,fp.size)){
 					dvs_free(bbuff);
 					free(buff);

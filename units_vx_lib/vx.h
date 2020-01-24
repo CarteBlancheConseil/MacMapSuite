@@ -146,10 +146,26 @@ typedef struct d3dvertices{
 }d3dvertices;
 
 //----------------------------------------------------------------------------
+// I/O utilities
+
+typedef struct ivertices32{
+    int			sign;
+    int			nv;
+    int			no;
+    int         offs;
+    union{
+        i2dvertex	vx2[1];
+        i3dvertex	vx3[1];
+    }vx;
+}ivertices32;
+
+//----------------------------------------------------------------------------
 
 #define	_2D_VX			2
 #define	_3D_VX			3
-#define __BOUNDS_MAX__	(LONG_MAX/2)
+
+#define __BOUNDS_MAX__	(INT_MAX/2)
+
 #define __FUZZY_DIST__	(sqrt(2.0)/2.0)
 #define __TEST_INT__	2398567903
 

@@ -48,41 +48,35 @@ bSHPTable	::bSHPTable(	const char* path,
 							int* status)
 			:bStdTable(reso,0.0,0.0,srid,srid,status){
 _bTrace_("bSHPTable::bSHPTable",false);
-int			ptype=db2shp(*status);
-	
+int		ptype=db2shp(*status);
 char	fpath[1024];
 	
 	sprintf(fpath,"%s%s",path,name);
-//_tm_(fpath);
-	_shp=SHPOpen(fpath,"rb+");
+                
+    if(create){
+        _shp=SHPCreate(fpath,ptype);
+        if(!_shp){
+_te_(fpath+" : creation failed");
+            *status=-1;
+            return;
+        }
+        *status=0;
+        return;
+    }
+                
+    _shp=SHPOpen(fpath,"rb+");
 	if(!_shp){
-//_te_("SHPOpen failed for rb+");
 		_shp=SHPOpen(fpath,"rb");
 	}
-//_tm_("SHPOpen passed");
 	if(_shp){
 int		count;
 double	bmin[4],bmax[4];
-//_tm_("SHPGetInfo");
 		SHPGetInfo(_shp,&count,&ptype,bmin,bmax);
-//_tm_(count+" objects of "+ptype+" kind");
 		*status=shp2db(ptype);
 		return;
 	}
-//_te_("SHPOpen failed for rb");
-
-	if(!create){
-		*status=-1;
 _te_(fpath+" : table not found");
-		return;
-	}
-	_shp=SHPCreate(fpath,ptype);
-	if(!_shp){
-_te_(fpath+" : creation failed");
-		*status=-1;
-		return;
-	}
-	*status=0;
+    *status=-1;
 }
 
 // ---------------------------------------------------------------------------
@@ -104,36 +98,31 @@ int			ptype=db2shp(*status);
 char	fpath[1024];
 	
 	sprintf(fpath,"%s%s",path,name);
-//_tm_(fpath);
-	_shp=SHPOpen(fpath,"rb+");
-	if(!_shp){
-//_te_("SHPOpen failed for rb+");
-		_shp=SHPOpen(fpath,"rb");
-	}
-//_tm_("SHPOpen passed");
-	if(_shp){
-int		count;
-double	bmin[4],bmax[4];
-//_tm_("SHPGetInfo");
-		SHPGetInfo(_shp,&count,&ptype,bmin,bmax);
-//_tm_(count+" objects of "+ptype+" kind");
-		*status=shp2db(ptype);
-		return;
-	}
-//_te_("SHPOpen failed for rb");
 
-	if(!create){
-		*status=-1;
-_te_(fpath+" : table not found");
-		return;
-	}
-	_shp=SHPCreate(fpath,ptype);
-	if(!_shp){
+    if(create){
+        _shp=SHPCreate(fpath,ptype);
+        if(!_shp){
 _te_(fpath+" : creation failed");
-		*status=-1;
-		return;
-	}
-	*status=0;
+            *status=-1;
+            return;
+        }
+        *status=0;
+        return;
+    }
+                
+    _shp=SHPOpen(fpath,"rb+");
+    if(!_shp){
+        _shp=SHPOpen(fpath,"rb");
+    }
+    if(_shp){
+int     count;
+double  bmin[4],bmax[4];
+        SHPGetInfo(_shp,&count,&ptype,bmin,bmax);
+        *status=shp2db(ptype);
+        return;
+    }
+_te_(fpath+" : table not found");
+    *status=-1;
 }
 
 // ---------------------------------------------------------------------------
