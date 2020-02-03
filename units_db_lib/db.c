@@ -280,7 +280,7 @@ static void	dontswap(size_t sz, size_t n, void* arr){
 //------------
 static void DB32_CheckEndian(DB_info32* db32, DB_info* db){
     if(db32->endian!=1){
-//fprintf(stderr,"ENDIANNESS : Table need swap proc\n");
+fprintf(stderr,"ENDIANNESS : Table need swap proc\n");
         swapword(sizeof(int),&db32->spy);
         swapword(sizeof(int),&db32->vers);
         swapword(sizeof(int),&db32->nFld);
@@ -295,7 +295,7 @@ static void DB32_CheckEndian(DB_info32* db32, DB_info* db){
         db->swproc=swap;
     }
     else{
-//fprintf(stderr,"ENDIANNESS : Table don't need swap proc\n");
+fprintf(stderr,"ENDIANNESS : Table don't need swap proc\n");
         db->swproc=dontswap;
     }
     
@@ -309,6 +309,8 @@ static void DB32_CheckEndian(DB_info32* db32, DB_info* db){
     db->uPos=db32->uPos;
     db->readOnly=db32->readOnly;
     db->rBuffSz=db32->rBuffSz;
+
+    db->endian=db32->endian;
 }
 
 //----------------------------------------------------------------------------
@@ -336,33 +338,39 @@ long	i;
 //----------------------------------------------------------------------------
 //
 //------------
-static void	DB_Swap(DB_info* db, int nFld){
-long	i;
+static void	DB_Swap32(DB_info32* db, int nFld, swapper swproc){
+// Pas le endian, pour garder la trace intacte
+	(*(swproc))(sizeof(int),1,&db->spy);
+	(*(swproc))(sizeof(int),1,&db->vers);
+	(*(swproc))(sizeof(int),1,&db->nFld);
+	(*(swproc))(sizeof(int),1,&db->nRec);
+	(*(swproc))(sizeof(int),1,&db->recSz);
+	(*(swproc))(sizeof(int),1,&db->dtOff);
+	(*(swproc))(sizeof(int),1,&db->fPos);
+	(*(swproc))(sizeof(int),1,&db->uPos);
+	(*(swproc))(sizeof(int),1,&db->readOnly);
+	(*(swproc))(sizeof(int),1,&db->rBuffSz);
+}
 
-	(*(db->swproc))(sizeof(int),1,&db->spy);
-	(*(db->swproc))(sizeof(int),1,&db->vers);
-	(*(db->swproc))(sizeof(int),1,&db->nFld);
-	(*(db->swproc))(sizeof(int),1,&db->nRec);
-	(*(db->swproc))(sizeof(int),1,&db->recSz);
-	(*(db->swproc))(sizeof(int),1,&db->dtOff);
-	(*(db->swproc))(sizeof(int),1,&db->fPos);
-	(*(db->swproc))(sizeof(int),1,&db->uPos);
-	(*(db->swproc))(sizeof(int),1,&db->readOnly);
-	(*(db->swproc))(sizeof(int),1,&db->rBuffSz);
-
-	for(i=0;i<nFld;i++){
-		(*(db->swproc))(sizeof(int),1,&db->flds[i].sign);
-		(*(db->swproc))(sizeof(int),1,&db->flds[i].fid);
-		(*(db->swproc))(sizeof(int),1,&db->flds[i].attrs);
-		(*(db->swproc))(sizeof(int),1,&db->flds[i].length);
-		(*(db->swproc))(sizeof(int),1,&db->flds[i].decs);
-		(*(db->swproc))(sizeof(int),1,&db->flds[i].sz);
-		(*(db->swproc))(sizeof(int),1,&db->flds[i].off);
-		(*(db->swproc))(sizeof(int),1,&db->flds[i].reserved0);
-		(*(db->swproc))(sizeof(int),1,&db->flds[i].reserved1);
-		(*(db->swproc))(sizeof(int),1,&db->flds[i].reserved2);
-		(*(db->swproc))(sizeof(int),1,&db->flds[i].reserved3);
-	}
+//----------------------------------------------------------------------------
+//
+//------------
+static void    DB_SwapFields(DB_fld* flds, int nFld, swapper swproc){
+long    i;
+    
+    for(i=0;i<nFld;i++){
+        (*(swproc))(sizeof(int),1,&flds[i].sign);
+        (*(swproc))(sizeof(int),1,&flds[i].fid);
+        (*(swproc))(sizeof(int),1,&flds[i].attrs);
+        (*(swproc))(sizeof(int),1,&flds[i].length);
+        (*(swproc))(sizeof(int),1,&flds[i].decs);
+        (*(swproc))(sizeof(int),1,&flds[i].sz);
+        (*(swproc))(sizeof(int),1,&flds[i].off);
+        (*(swproc))(sizeof(int),1,&flds[i].reserved0);
+        (*(swproc))(sizeof(int),1,&flds[i].reserved1);
+        (*(swproc))(sizeof(int),1,&flds[i].reserved2);
+        (*(swproc))(sizeof(int),1,&flds[i].reserved3);
+    }
 
 }
 
@@ -488,8 +496,6 @@ size_t      bkn=db->nFld;
     
     fseek(db->ff,0,SEEK_SET);
 
-    DB_Swap(db,bkn);
-
     db32.spy=db->spy;
     db32.vers=db->vers;
     db32.endian=db->endian;
@@ -524,6 +530,12 @@ size_t      bkn=db->nFld;
     db32.fu=0;//db->fu;
     db32.spy=db->spy;
     
+//fprintf(stderr,"%d\n",db32.endian);
+//fprintf(stderr,"%d\n",db32.nFld);
+    DB_Swap32(&db32,bkn,db->swproc);
+//fprintf(stderr,"%d\n",db32.endian);
+//fprintf(stderr,"%d\n",db32.nFld);
+
     if(db32.fPos<0){
         db32.fPos=0;
     }
@@ -532,16 +544,22 @@ size_t      bkn=db->nFld;
     }
     
     if(fwrite(&db32,sizeof(DB_info32),1,ff)!=1){
-        DB_Swap(db,bkn);
         return(-40);
     }
     
-    if(fwrite(db->flds,bkn*sizeof(DB_fld),1,ff)!=1){
-        DB_Swap(db,bkn);
-        return(-41);
+DB_fld *flds=malloc(bkn*sizeof(DB_fld));
+    if(flds){
+        for(long i=0;i<bkn;i++){
+            flds[i]=db->flds[i];
+        }
+        DB_SwapFields(flds,bkn,db->swproc);
+        if(fwrite(flds,bkn*sizeof(DB_fld),1,ff)!=1){
+            free(flds);
+            return(-41);
+        }
+        free(flds);
     }
     
-    DB_Swap(db,bkn);
     return 0;
 }
 
@@ -910,6 +928,9 @@ fprintf(stderr,"DB_OpenH : fread db failed\n");
 			break;
 		}
         
+        
+fprintf(stderr,"opening %s\n",fName);
+       
         DB32_CheckEndian(&db32,db);
         
 		n=db->nFld;

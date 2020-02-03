@@ -75,6 +75,9 @@ void		ivs_closegeom	(	ivertices* vxs);
 int         ivs_integrity   (   int kind,
                                 ivertices* vxs);
 
+ivertices*  ivs_polylineFix (   ivertices* vxs);
+ivertices*  ivs_polygonFix  (   ivertices* vxs);
+
 void		ivx_angleproj	(	i2dvertex*	vx,	
 								i2dvertex* vx1, 
 								i2dvertex*	vx2, 

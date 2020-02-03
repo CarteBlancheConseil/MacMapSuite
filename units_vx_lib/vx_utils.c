@@ -221,6 +221,111 @@ int         n;
 }
 
 // ---------------------------------------------------------------------------
+//
+// -----------
+ivertices*  ivs_polylineFix(ivertices* vxs){
+    if(ivs_n_parts(vxs)==0){
+        return NULL;
+    }
+    if(ivs_n_parts(vxs)==1){
+        return vxs;
+    }
+
+int         n;
+long        i,j;
+ivertices   *res,*tmp;
+i2dvertex   *vp;
+    
+    res=ivs_new(_2D_VX,0,0);
+    for(i=0;i<ivs_n_parts(vxs);i++){
+        vp=ivs2_part(vxs,i,&n);
+        if(vp==NULL){
+            continue;
+        }
+        if(n>vxs->nv){
+            continue;
+        }
+        tmp=ivs_new(_2D_VX,1,0);
+        tmp->vx.vx2[0]=vp[0];
+        for(j=0;j<n-1;j++){
+            if(eq_ivx2(&vp[j],&vp[j+1])){
+                continue;
+            }
+            tmp=ivx2_add(tmp,&vp[j+1]);
+        }
+        if(tmp->nv>=2){
+            if(res->nv==0){
+                res=ivs_concat(res,tmp);
+            }
+            else{
+                res=ivs_group(res,tmp);
+            }
+        }
+        ivs_free(tmp);
+    }
+    if(ivs_integrity(kVXPolyline,res)!=0){
+        ivs_free(res);
+        res=NULL;
+    }
+    
+//char* txt=ivs2text(kVXPolyline,1,res);
+//fprintf(stderr,"%s\n",txt);
+//free(txt);
+    
+    return res;
+}
+
+// ---------------------------------------------------------------------------
+//
+// -----------
+ivertices*  ivs_polygonFix(ivertices* vxs){
+    if(ivs_n_parts(vxs)==0){
+        return NULL;
+    }
+    if(ivs_n_parts(vxs)==1){
+        return vxs;
+    }
+
+int         n;
+long        i,j;
+ivertices   *res,*tmp;
+i2dvertex   *vp;
+    
+    res=ivs_new(_2D_VX,0,0);
+    for(i=0;i<ivs_n_parts(vxs);i++){
+        vp=ivs2_part(vxs,i,&n);
+        if(vp==NULL){
+            continue;
+        }
+        if(n>vxs->nv){
+            continue;
+        }
+        tmp=ivs_new(_2D_VX,1,0);
+        tmp->vx.vx2[0]=vp[0];
+        for(j=0;j<n-1;j++){
+            if(eq_ivx2(&vp[j],&vp[j+1])){
+                continue;
+            }
+            tmp=ivx2_add(tmp,&vp[j+1]);
+        }
+        if(tmp->nv>=4){
+            if(res->nv==0){
+                res=ivs_concat(res,tmp);
+            }
+            else{
+                res=ivs_group(res,tmp);
+            }
+        }
+        ivs_free(tmp);
+    }
+    if(ivs_integrity(kVXPolyline,res)!=0){
+        ivs_free(res);
+        res=NULL;
+    }
+    return res;
+}
+
+// ---------------------------------------------------------------------------
 // 
 // -----------
 void ivx_angleproj(i2dvertex* vx, i2dvertex* vx1, i2dvertex* vx2, double rad){
@@ -432,7 +537,7 @@ fprintf(stderr,"ivx2_insert::bad sign (%d)\n",vxs->sign);
 		return(vxs);
 	}
 	if(eq_ivx2(&vxs->vx.vx2[idx],&bf)){
-//fprintf(stderr,"ivx2_insert::equal points \n");
+fprintf(stderr,"ivx2_insert::equal points \n");
 		return(vxs);
 	}
 	sz=(vxs->nv+1)*sizeof(i2dvertex);

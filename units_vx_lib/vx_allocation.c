@@ -393,21 +393,16 @@ ivertices* nth_ivs(ivertices *vxs, long part){
 i2dvertex*  vxpart;
 int         nvx;
 ivertices*  res;
-
-//fprintf(stderr,"nth_ivs %d\n",(int)part);
+    
     vxpart=ivs2_part(vxs,part,&nvx);
     if(vxpart==NULL){
-//fprintf(stderr,"nth_ivs (vxpart==NULL)\n");
         return NULL;
     }
     if(nvx<=0){
-//fprintf(stderr,"nth_ivs (nvx<=0)\n");
         return NULL;
     }
-//fprintf(stderr,"nth_ivs nvx=%d\n",nvx);
     res=ivs_new(_2D_VX,nvx,0);
     if(res==NULL){
-//fprintf(stderr,"nth_ivs (res==NULL)\n");
         return NULL;
     }
     memmove(res->vx.vx2,vxpart,nvx*sizeof(i2dvertex));
