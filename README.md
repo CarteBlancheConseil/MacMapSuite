@@ -16,7 +16,7 @@ It embeds some of the most famous GIS libraries :
 All binaries, librairies, includes, etc... are available in the "unix" folder of the compiled framework.
 
 **Compilation :**
-You can open MacMapSuite.xcodeproj with Xcode then compile, or if you prefer to use the command line tool xcodebuild, open a terminal window and type a command like *xcodebuild install -configuration Release -Scheme MacMapSuite ARCHS ="i386" -sdk macosx10.8*.
+You can open MacMapSuite.xcodeproj with Xcode then compile, or if you prefer to use the xcodebuild command line tool, open a terminal window and type a command like *xcodebuild install -configuration Release -Scheme MacMapSuite ARCHS ="i386" -sdk macosx10.8*.
 
 Note: MacMap projects are currently built with Xcode 11 against Mac OS X 10.12 SDK.
 
