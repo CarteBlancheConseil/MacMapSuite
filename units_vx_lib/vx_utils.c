@@ -227,9 +227,9 @@ ivertices*  ivs_polylineFix(ivertices* vxs){
     if(ivs_n_parts(vxs)==0){
         return NULL;
     }
-    if(ivs_n_parts(vxs)==1){
+/*    if(ivs_n_parts(vxs)==1){
         return vxs;
-    }
+    }*/
 
 int         n;
 long        i,j;
@@ -282,9 +282,9 @@ ivertices*  ivs_polygonFix(ivertices* vxs){
     if(ivs_n_parts(vxs)==0){
         return NULL;
     }
-    if(ivs_n_parts(vxs)==1){
+/*    if(ivs_n_parts(vxs)==1){
         return vxs;
-    }
+    }*/
 
 int         n;
 long        i,j;
