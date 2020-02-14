@@ -1134,6 +1134,7 @@ ivertices* vxs=ivs_new(vxs32->sign,vxs32->nv,vxs32->no);
         return vxs;
     }
     vxs->offs=(int*)malloc(vxs->no*sizeof(int));
+size_t    sz;    
     switch(vxs->sign){
         case _2D_VX:
             memmove(vxs->offs,&vxs32->vx.vx2[vxs->nv],vxs->no*sizeof(int));
@@ -1142,7 +1143,7 @@ ivertices* vxs=ivs_new(vxs32->sign,vxs32->nv,vxs32->no);
             memmove(vxs->offs,&vxs32->vx.vx3[vxs->nv],vxs->no*sizeof(int));
             break;
     }
-size_t    sz=sizeofivs2(vxs->nv,0);
+    sz=sizeofivs2(vxs->nv,0);
     vxs=(ivertices*)realloc(vxs,sz);
     return vxs;
 }

@@ -292,12 +292,12 @@ int	bSHPTable::signature(){
 ivertices* bSHPTable::shape2vxs(SHPObject* o){
 ivertices*	vxs=NULL;
 	if(o->nVertices>0){
-int			np=(o->nParts>1)?o->nParts:0;
+int		np=(o->nParts>1)?o->nParts:0;
 		if(transform_ready()==false){
 d2dvertex	dvx;
 			vxs=ivs_new(_2D_VX,o->nVertices,np);
 			if(np){
-				memmove(vxs->offs,o->panPartStart,vxs->no*sizeof(int));
+                memmove(vxs->offs,o->panPartStart,vxs->no*sizeof(int));
 			}
 			for(int i=0;i<o->nVertices;i++){
 				dvx.x=o->padfX[i]-_ox;

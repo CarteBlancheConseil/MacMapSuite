@@ -243,49 +243,43 @@ int ivs2ivs(ivertices *vin, ivertices **vxs){
 // -----------
 int ivs2ivs32(ivertices *vin, ivertices32 **vxs){
 size_t  sz;
+    *vxs=NULL;
     if(vin->sign==_2D_VX){
         sz=(size_t)vin->nv*sizeof(i2dvertex);
     }
     else{
         sz=(size_t)vin->nv*sizeof(i3dvertex);
     }
-    *vxs=(ivertices32*)malloc((sizeof(ivertices32)-sizeof(i3dvertex))+sz+vin->no*sizeof(int));
-    if(!*vxs){
+ivertices32*    res=(ivertices32*)malloc((sizeof(ivertices32)-sizeof(i3dvertex))+sz+vin->no*sizeof(int));
+    if(!res){
         return(-1);
     }
-    (void)memset((*vxs),0,(sizeof(ivertices32)-sizeof(i3dvertex))+sz+vin->no*sizeof(int));
-    /*if(vin->no>0){
-        *vxs->offs=(int*)malloc((size_t)vin->no*sizeof(int));
-        if(!*vxs->offs){
-            free(vxs);
-            return(NULL);
-        }
-        memset(vxs->offs,0,(size_t)no*sizeof(int));
-        vxs->no=no;
-    }
-    else{
-        vxs->offs=NULL;
-        vxs->no=0;
-    }*/
+    (void)memset(res,0,(sizeof(ivertices32)-sizeof(i3dvertex))+sz+vin->no*sizeof(int));
     
-    (*vxs)->sign=vin->sign;
-    (*vxs)->nv=vin->nv;
-    (*vxs)->no=vin->no;
-    (*vxs)->offs=0;
+    res->sign=vin->sign;
+    res->nv=vin->nv;
+    res->no=vin->no;
+    res->offs=0;
 
     if(vin->sign==_2D_VX){
-        memmove((*vxs)->vx.vx2,vin->vx.vx2,sz);
+        memmove(res->vx.vx2,vin->vx.vx2,sz);
         if(vin->no>0){
-            memmove((*vxs)->vx.vx2+sz,vin->offs,(size_t)vin->no*sizeof(int));
+void*  src=vin->offs;
+void*  dst=&res->vx.vx2[res->nv];
+size_t len=((size_t)vin->no)*sizeof(int);
+            memcpy(dst,src,len);
         }
     }
     else{
-        memmove((*vxs)->vx.vx3,vin->vx.vx3,sz);
+        memmove(res->vx.vx3,vin->vx.vx3,sz);
         if(vin->no>0){
-            memmove((*vxs)->vx.vx3+sz,vin->offs,(size_t)vin->no*sizeof(int));
+void*  src=vin->offs;
+void*  dst=&res->vx.vx3[res->nv];
+size_t len=((size_t)vin->no)*sizeof(int);
+            memcpy(dst,src,len);
         }
     }
-
+    *vxs=res;
     return(0);
 }
 
