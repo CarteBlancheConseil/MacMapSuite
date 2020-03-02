@@ -1034,6 +1034,8 @@ fprintf(stderr,"DB_OpenH : fwrite failed\n");
 			DB_uBuffLoad(sizeof(int),db);
 		}
 		/*fu*/
+        
+fprintf(stderr,"DB_OpenH : nFields=%d, nRecords=%d\n",db->nFld,db->nRec);
 
 
 		return(db);
@@ -1542,7 +1544,11 @@ DB_fld	f;
 	}
 	/**/
 	
+FILE*   tmp;
+    tmp=db->ff;
+    db->ff=fp;
     n=DB_writeHeader(db);
+    db->ff=tmp;
     if(n){
 fprintf(stderr,"DB_ChgFieldWithRec : DB_writeHeader failed %d\n",n);
         return(n);
@@ -1566,7 +1572,6 @@ fflush(stderr);
 		
 // FSEEK A MODIFIER
 		fseek(fp,db->dtOff+i*db->recSz,SEEK_SET);
-		
 		fwrite(buff,sz1,1,fp);
 
 		/**/
@@ -1998,9 +2003,13 @@ int	x,index,status;
 	}
 	
 	if(db->nRec==0){
+        fprintf(stderr,"DB_ChgField : no records\n");
+
 		status=DB_ChgFieldNoRec(db,idx,nam,sign,length,decs);
 	}
 	else{
+        fprintf(stderr,"DB_ChgField : some records\n");
+
 		status=DB_ChgFieldWithRec(db,idx,nam,sign,length,decs);
 	}
 	DB_fBuffLoad(db->dtOff,db);

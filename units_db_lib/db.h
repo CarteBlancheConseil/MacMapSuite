@@ -114,7 +114,7 @@ typedef struct DB_info{
 	DB_fld		flds[];		// les champs	
 }DB_info;
 
-// Descripteur de la table pour lecture 32bits
+// Descripteur de la table pour lecture/ecriture fichier 32bits
 typedef struct DB_info32{
     int			spy;		// témoin de crash (inutilisé actuellement)
     int			vers;		// version (inutilisé actuellement)
