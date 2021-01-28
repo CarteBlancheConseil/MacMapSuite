@@ -988,6 +988,7 @@ char*	txt=dvs2text(_gk,dvxs);
 // 
 // -----------
 ivertices*	bTextMMTable::load_vxs(char* str){
+//_bTrace_("bTextMMTable::load_vxs",true);
 int			kind;
 ivertices*	vxs=NULL;
 dvertices*	dvxs=text2dvs(&kind,str);
@@ -998,6 +999,7 @@ dvertices*	dvxs=text2dvs(&kind,str);
 	dvs_move(dvxs,-_ox,-_oy);
 	vxs_d2i(&vxs,dvxs,_reso);
 	dvs_free(dvxs);
+//_tm_(vxs->nv+":"+vxs->no);
 	if(vxs==NULL){
 		return(NULL);
 	}

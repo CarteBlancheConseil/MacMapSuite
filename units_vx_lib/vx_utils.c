@@ -31,6 +31,9 @@
 #include "vx_measure.h"
 #include "vx_utils.h"
 #include "C_Utils.h"
+
+#include "wtrace.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -638,12 +641,15 @@ void	ivs_split(ivertices* vxs, int idx, ivertices** vsa, ivertices** vsb){
 	*vsa=NULL;
 	*vsb=NULL;
 	if(!vxs){
+        fprintf(stderr,"ivs_split : NO VXS");
 		return;
 	}
 	if(vxs->nv<3){
+        fprintf(stderr,"ivs_split : vxs->nv<3");
 		return;
 	}
 	if((idx<=0)||(idx>=vxs->nv-1)){
+        fprintf(stderr,"ivs_split : (idx<=0)||(idx>=vxs->nv-1) [0 < %d < %d]",idx,vxs->nv-1);
 		return;
 	}
 
@@ -1460,7 +1466,7 @@ fprintf(stderr,"text2ivs::Malformed, (nested<0)\n");
 						ivs_free(cur);
 					}
 				}
-				if(nested==0){
+				else if(nested==0){
 					code=kGeomEnd;
 					start=-1;
 					//res=ivs_group(res,cur);
@@ -1497,7 +1503,7 @@ fprintf(stderr,"text2ivs::size out of range\n");
 						else{
 							res=ivs_group(res,cur);
 						}
-					}					
+					}
 					ivs_free(cur);
 					cur=NULL;
 				}
@@ -1554,7 +1560,7 @@ fprintf(stderr,"text2ivs::size out of range\n");
 				break;
 		}
 	}
-	return(res);
+    return(res);
 }
 
 // ---------------------------------------------------------------------------

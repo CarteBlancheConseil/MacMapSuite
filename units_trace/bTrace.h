@@ -83,7 +83,7 @@ public:
 
     virtual void sep		(	);
     virtual void wtime		(	);
-
+    
 protected:
     virtual void enter		(	);
     virtual void leave		(	);
