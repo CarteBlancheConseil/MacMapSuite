@@ -188,14 +188,14 @@ extern "C" {
 /************************************************************************/
 typedef	struct
 {
-    FILE        *fpSHP;
+    FILE    *fpSHP;
     FILE	*fpSHX;
 
     int		nShapeType;				/* SHPT_* */
     
     int		nFileSize;				/* SHP file */
 
-    int         nRecords;
+    int     nRecords;
     int		nMaxRecords;
     int		*panRecOffset;
     int		*panRecSize;

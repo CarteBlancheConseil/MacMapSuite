@@ -28,7 +28,6 @@
 		1460E3280993AB9B00E30534 /* bv310PGisBaseAccessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1460E3220993AB9B00E30534 /* bv310PGisBaseAccessor.h */; };
 		14634D650AF23BCE0026453F /* vx_raw.c in Sources */ = {isa = PBXBuildFile; fileRef = 14634D630AF23BCE0026453F /* vx_raw.c */; };
 		14634D660AF23BCE0026453F /* vx_raw.h in Headers */ = {isa = PBXBuildFile; fileRef = 14634D640AF23BCE0026453F /* vx_raw.h */; };
-		146359621B0379CF0006EB54 /* libcurl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 146359611B0379CF0006EB54 /* libcurl.dylib */; };
 		1463B497097C06DE00FB5653 /* vx.h in Headers */ = {isa = PBXBuildFile; fileRef = 1499A152097B786100DA8347 /* vx.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1463B498097C06DE00FB5653 /* vx_allocation.c in Sources */ = {isa = PBXBuildFile; fileRef = 1499A153097B786100DA8347 /* vx_allocation.c */; };
 		1463B499097C06DE00FB5653 /* vx_allocation.h in Headers */ = {isa = PBXBuildFile; fileRef = 1499A154097B786100DA8347 /* vx_allocation.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -77,9 +76,6 @@
 		1463B60B097C171B00FB5653 /* PGis_Utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 1463B57F097C171B00FB5653 /* PGis_Utils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		146A5E501B73AEB000D02529 /* unix in Resources */ = {isa = PBXBuildFile; fileRef = 146A5E4F1B73AEB000D02529 /* unix */; };
 		146A5E511B73AED800D02529 /* unix in CopyFiles */ = {isa = PBXBuildFile; fileRef = 146A5E4F1B73AEB000D02529 /* unix */; };
-		146A5E531B73AEEB00D02529 /* libproj.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 146A5E521B73AEEB00D02529 /* libproj.dylib */; };
-		146A5E561B73BC3400D02529 /* libgeos_c.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 146A5E541B73BC3400D02529 /* libgeos_c.dylib */; };
-		146A5E571B73BC3400D02529 /* libgeos.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 146A5E551B73BC3400D02529 /* libgeos.dylib */; };
 		146B87F51B7BA02300D80C86 /* geos_c.h in Headers */ = {isa = PBXBuildFile; fileRef = 146B87EF1B7BA02300D80C86 /* geos_c.h */; };
 		146B87F61B7BA02300D80C86 /* geos.h in Headers */ = {isa = PBXBuildFile; fileRef = 146B87F01B7BA02300D80C86 /* geos.h */; };
 		146B87F71B7BA02300D80C86 /* nad_list.h in Headers */ = {isa = PBXBuildFile; fileRef = 146B87F11B7BA02300D80C86 /* nad_list.h */; };
@@ -88,14 +84,11 @@
 		146B87FA1B7BA02300D80C86 /* projects.h in Headers */ = {isa = PBXBuildFile; fileRef = 146B87F41B7BA02300D80C86 /* projects.h */; };
 		146B87FC1B7BA0D400D80C86 /* export.h in Headers */ = {isa = PBXBuildFile; fileRef = 146B87FB1B7BA0D400D80C86 /* export.h */; };
 		1477AF422304507400C010F4 /* postgres_ext.h in Headers */ = {isa = PBXBuildFile; fileRef = 1477AF412304507400C010F4 /* postgres_ext.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		147E6D711B7CD8E4001BD909 /* libmitab-1.0.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 147E6D701B7CD8E4001BD909 /* libmitab-1.0.1.dylib */; };
 		147E6D731B7CD902001BD909 /* mitab_capi.h in Headers */ = {isa = PBXBuildFile; fileRef = 147E6D721B7CD902001BD909 /* mitab_capi.h */; };
 		149816250D92B6DA00803F89 /* MacMapSuite_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 149816240D92B6DA00803F89 /* MacMapSuite_Prefix.pch */; };
 		1498C4750A1B0359007A1D5B /* mms_config.c in Sources */ = {isa = PBXBuildFile; fileRef = 1498C4740A1B0359007A1D5B /* mms_config.c */; };
-		149919BC1B7E14700008B5CE /* libpq.4.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 149919BB1B7E14700008B5CE /* libpq.4.1.dylib */; };
 		1499A149097B77C100DA8347 /* MacMapSuiteC.h in Headers */ = {isa = PBXBuildFile; fileRef = 1499A148097B77C100DA8347 /* MacMapSuiteC.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1499A560097BCB8800DA8347 /* MacMapSuiteCPP.h in Headers */ = {isa = PBXBuildFile; fileRef = 1499A55F097BCB8800DA8347 /* MacMapSuiteCPP.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		149D77171CAD31B500505E82 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 149D77161CAD31B500505E82 /* libxml2.dylib */; };
 		14A04E7B099B507B00F9DA12 /* mms_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 14A04E7A099B507B00F9DA12 /* mms_config.h */; };
 		14A27AED099CAD09006C8FE1 /* wproj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14A27AEB099CAD09006C8FE1 /* wproj.cpp */; };
 		14A27AEE099CAD09006C8FE1 /* wproj.h in Headers */ = {isa = PBXBuildFile; fileRef = 14A27AEC099CAD09006C8FE1 /* wproj.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -104,6 +97,14 @@
 		14A27B04099CB3FE006C8FE1 /* db_lib.h in Headers */ = {isa = PBXBuildFile; fileRef = 14A27B03099CB3FE006C8FE1 /* db_lib.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		14A7CC30097C22CF0094CBBD /* wtable.h in Headers */ = {isa = PBXBuildFile; fileRef = 14A7CC2E097C22CF0094CBBD /* wtable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		14A7CC31097C22CF0094CBBD /* wtable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14A7CC2F097C22CF0094CBBD /* wtable.cpp */; };
+		14A9CBC529A8FB8B000EEF38 /* libmitab-1.0.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 147E6D701B7CD8E4001BD909 /* libmitab-1.0.1.dylib */; };
+		14A9CBC629A8FB8B000EEF38 /* libpq.5.15.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 14A479A429A639D90098E375 /* libpq.5.15.dylib */; };
+		14A9CBCA29A8FB8B000EEF38 /* libproj.0.5.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 14A9CBC729A8FB8B000EEF38 /* libproj.0.5.2.dylib */; };
+		14A9CBCB29A8FB8B000EEF38 /* libgeos_c.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 14A9CBC829A8FB8B000EEF38 /* libgeos_c.1.dylib */; };
+		14A9CBCC29A8FB8B000EEF38 /* libgeos-3.4.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 14A9CBC929A8FB8B000EEF38 /* libgeos-3.4.2.dylib */; };
+		14A9CBD029A8FB9E000EEF38 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 14A9CBCF29A8FB9E000EEF38 /* libxml2.tbd */; };
+		14A9CBD429A8FC26000EEF38 /* libcurl.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 14A9CBD229A8FC26000EEF38 /* libcurl.tbd */; };
+		14A9F1CA29AF55700003825C /* pg_config_ext.h in Headers */ = {isa = PBXBuildFile; fileRef = 14A9F1C929AF55700003825C /* pg_config_ext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		14BFF4461B84CF500022F7D0 /* libpq-fe.h in Headers */ = {isa = PBXBuildFile; fileRef = 14BFF4451B84CF500022F7D0 /* libpq-fe.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		14C6EF17099C94010071CA4D /* lambert93.h in Headers */ = {isa = PBXBuildFile; fileRef = 14C6EF15099C94010071CA4D /* lambert93.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		14C6EF18099C94010071CA4D /* lambert93.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14C6EF16099C94010071CA4D /* lambert93.cpp */; };
@@ -184,7 +185,6 @@
 		1460E3220993AB9B00E30534 /* bv310PGisBaseAccessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bv310PGisBaseAccessor.h; sourceTree = "<group>"; };
 		14634D630AF23BCE0026453F /* vx_raw.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = vx_raw.c; sourceTree = "<group>"; };
 		14634D640AF23BCE0026453F /* vx_raw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vx_raw.h; sourceTree = "<group>"; };
-		146359611B0379CF0006EB54 /* libcurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.dylib; path = usr/lib/libcurl.dylib; sourceTree = SDKROOT; };
 		1463B4D2097C07E000FB5653 /* bArray.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bArray.cpp; sourceTree = "<group>"; };
 		1463B4D3097C07E000FB5653 /* bArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bArray.h; sourceTree = "<group>"; };
 		1463B4D4097C07E000FB5653 /* warray.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = warray.cpp; sourceTree = "<group>"; };
@@ -208,9 +208,6 @@
 		1463B57E097C171B00FB5653 /* PGis_Utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PGis_Utils.c; sourceTree = "<group>"; };
 		1463B57F097C171B00FB5653 /* PGis_Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PGis_Utils.h; sourceTree = "<group>"; };
 		146A5E4F1B73AEB000D02529 /* unix */ = {isa = PBXFileReference; lastKnownFileType = folder; name = unix; path = UXLibs/unix; sourceTree = "<group>"; };
-		146A5E521B73AEEB00D02529 /* libproj.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libproj.dylib; path = unix/lib/libproj.dylib; sourceTree = "<group>"; };
-		146A5E541B73BC3400D02529 /* libgeos_c.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgeos_c.dylib; path = unix/lib/libgeos_c.dylib; sourceTree = "<group>"; };
-		146A5E551B73BC3400D02529 /* libgeos.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgeos.dylib; path = unix/lib/libgeos.dylib; sourceTree = "<group>"; };
 		146B87EF1B7BA02300D80C86 /* geos_c.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = geos_c.h; path = UXLibs/unix/include/geos_c.h; sourceTree = SOURCE_ROOT; };
 		146B87F01B7BA02300D80C86 /* geos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = geos.h; path = UXLibs/unix/include/geos.h; sourceTree = SOURCE_ROOT; };
 		146B87F11B7BA02300D80C86 /* nad_list.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nad_list.h; path = UXLibs/unix/include/nad_list.h; sourceTree = SOURCE_ROOT; };
@@ -223,7 +220,6 @@
 		147E6D721B7CD902001BD909 /* mitab_capi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mitab_capi.h; path = UXLibs/unix/include/mitab_capi.h; sourceTree = SOURCE_ROOT; };
 		149816240D92B6DA00803F89 /* MacMapSuite_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = MacMapSuite_Prefix.pch; sourceTree = "<group>"; };
 		1498C4740A1B0359007A1D5B /* mms_config.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mms_config.c; sourceTree = "<group>"; };
-		149919BB1B7E14700008B5CE /* libpq.4.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpq.4.1.dylib; path = unix/lib/libpq.4.1.dylib; sourceTree = "<group>"; };
 		1499A148097B77C100DA8347 /* MacMapSuiteC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MacMapSuiteC.h; sourceTree = "<group>"; };
 		1499A152097B786100DA8347 /* vx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vx.h; sourceTree = "<group>"; };
 		1499A153097B786100DA8347 /* vx_allocation.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = vx_allocation.c; sourceTree = "<group>"; };
@@ -250,15 +246,23 @@
 		1499A4B2097B977D00DA8347 /* shapefil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = shapefil.h; path = units_shapelib/shapefil.h; sourceTree = "<group>"; };
 		1499A4B3097B977D00DA8347 /* shpopen.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = shpopen.c; path = units_shapelib/shpopen.c; sourceTree = "<group>"; };
 		1499A55F097BCB8800DA8347 /* MacMapSuiteCPP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MacMapSuiteCPP.h; sourceTree = "<group>"; };
-		149D77161CAD31B500505E82 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		14A04E7A099B507B00F9DA12 /* mms_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mms_config.h; sourceTree = "<group>"; };
 		14A27AEB099CAD09006C8FE1 /* wproj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = wproj.cpp; sourceTree = "<group>"; };
 		14A27AEC099CAD09006C8FE1 /* wproj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wproj.h; sourceTree = "<group>"; };
 		14A27AEF099CAD1D006C8FE1 /* wtrace.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = wtrace.cpp; sourceTree = "<group>"; };
 		14A27AF0099CAD1D006C8FE1 /* wtrace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wtrace.h; sourceTree = "<group>"; };
 		14A27B03099CB3FE006C8FE1 /* db_lib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = db_lib.h; sourceTree = "<group>"; };
+		14A479A429A639D90098E375 /* libpq.5.15.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpq.5.15.dylib; path = unix/lib/libpq.5.15.dylib; sourceTree = "<group>"; };
 		14A7CC2E097C22CF0094CBBD /* wtable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wtable.h; sourceTree = "<group>"; };
 		14A7CC2F097C22CF0094CBBD /* wtable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = wtable.cpp; sourceTree = "<group>"; };
+		14A9CBC729A8FB8B000EEF38 /* libproj.0.5.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libproj.0.5.2.dylib; path = unix/lib/libproj.0.5.2.dylib; sourceTree = "<group>"; };
+		14A9CBC829A8FB8B000EEF38 /* libgeos_c.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgeos_c.1.dylib; path = unix/lib/libgeos_c.1.dylib; sourceTree = "<group>"; };
+		14A9CBC929A8FB8B000EEF38 /* libgeos-3.4.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libgeos-3.4.2.dylib"; path = "unix/lib/libgeos-3.4.2.dylib"; sourceTree = "<group>"; };
+		14A9CBCD29A8FB94000EEF38 /* libcurl.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libcurl.tbd; path = usr/lib/libcurl.tbd; sourceTree = SDKROOT; };
+		14A9CBCF29A8FB9E000EEF38 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
+		14A9CBD129A8FC26000EEF38 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
+		14A9CBD229A8FC26000EEF38 /* libcurl.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libcurl.tbd; path = usr/lib/libcurl.tbd; sourceTree = SDKROOT; };
+		14A9F1C929AF55700003825C /* pg_config_ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pg_config_ext.h; path = UXLibs/unix/include/pg_config_ext.h; sourceTree = SOURCE_ROOT; };
 		14BFF4451B84CF500022F7D0 /* libpq-fe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "libpq-fe.h"; path = "UXLibs/unix/include/libpq-fe.h"; sourceTree = SOURCE_ROOT; };
 		14C6EF15099C94010071CA4D /* lambert93.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lambert93.h; sourceTree = "<group>"; };
 		14C6EF16099C94010071CA4D /* lambert93.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lambert93.cpp; sourceTree = "<group>"; };
@@ -315,13 +319,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				149D77171CAD31B500505E82 /* libxml2.dylib in Frameworks */,
-				149919BC1B7E14700008B5CE /* libpq.4.1.dylib in Frameworks */,
-				147E6D711B7CD8E4001BD909 /* libmitab-1.0.1.dylib in Frameworks */,
-				146A5E561B73BC3400D02529 /* libgeos_c.dylib in Frameworks */,
-				146A5E571B73BC3400D02529 /* libgeos.dylib in Frameworks */,
-				146A5E531B73AEEB00D02529 /* libproj.dylib in Frameworks */,
-				146359621B0379CF0006EB54 /* libcurl.dylib in Frameworks */,
+				14A9CBD429A8FC26000EEF38 /* libcurl.tbd in Frameworks */,
+				14A9CBD029A8FB9E000EEF38 /* libxml2.tbd in Frameworks */,
+				14A9CBCA29A8FB8B000EEF38 /* libproj.0.5.2.dylib in Frameworks */,
+				14A9CBCB29A8FB8B000EEF38 /* libgeos_c.1.dylib in Frameworks */,
+				14A9CBCC29A8FB8B000EEF38 /* libgeos-3.4.2.dylib in Frameworks */,
+				14A9CBC529A8FB8B000EEF38 /* libmitab-1.0.1.dylib in Frameworks */,
+				14A9CBC629A8FB8B000EEF38 /* libpq.5.15.dylib in Frameworks */,
 				14182D2819F8E9DA00C46D2E /* CoreFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -345,6 +349,7 @@
 				089C1665FE841158C02AAC07 /* Resources */,
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
 				034768DDFF38A45A11DB9C8B /* Products */,
+				14A479A329A639D90098E375 /* Frameworks */,
 			);
 			name = MapSuite;
 			sourceTree = "<group>";
@@ -352,7 +357,8 @@
 		0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				149D77161CAD31B500505E82 /* libxml2.dylib */,
+				14A9CBD129A8FC26000EEF38 /* libxml2.tbd */,
+				14A9CBD229A8FC26000EEF38 /* libcurl.tbd */,
 				146359351B0379890006EB54 /* UXLibs */,
 				14EFB0B61292761C0038AAD4 /* CoreFoundation.framework */,
 			);
@@ -459,6 +465,7 @@
 		146359361B0379890006EB54 /* include */ = {
 			isa = PBXGroup;
 			children = (
+				14A9F1C929AF55700003825C /* pg_config_ext.h */,
 				1477AF412304507400C010F4 /* postgres_ext.h */,
 				14BFF4451B84CF500022F7D0 /* libpq-fe.h */,
 				147E6D721B7CD902001BD909 /* mitab_capi.h */,
@@ -610,15 +617,23 @@
 			name = units_shapelib;
 			sourceTree = "<group>";
 		};
+		14A479A329A639D90098E375 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				14A9CBCF29A8FB9E000EEF38 /* libxml2.tbd */,
+				14A9CBCD29A8FB94000EEF38 /* libcurl.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		14AA9BA51B7CDA580006396B /* lib */ = {
 			isa = PBXGroup;
 			children = (
-				149919BB1B7E14700008B5CE /* libpq.4.1.dylib */,
+				14A9CBC829A8FB8B000EEF38 /* libgeos_c.1.dylib */,
+				14A9CBC929A8FB8B000EEF38 /* libgeos-3.4.2.dylib */,
+				14A9CBC729A8FB8B000EEF38 /* libproj.0.5.2.dylib */,
+				14A479A429A639D90098E375 /* libpq.5.15.dylib */,
 				147E6D701B7CD8E4001BD909 /* libmitab-1.0.1.dylib */,
-				146A5E541B73BC3400D02529 /* libgeos_c.dylib */,
-				146A5E551B73BC3400D02529 /* libgeos.dylib */,
-				146A5E521B73AEEB00D02529 /* libproj.dylib */,
-				146359611B0379CF0006EB54 /* libcurl.dylib */,
 			);
 			name = lib;
 			sourceTree = "<group>";
@@ -813,6 +828,7 @@
 				14CA73C50FC2B59D00BF0A74 /* NMEAParser.h in Headers */,
 				14E05D520FF3BA880059CE65 /* mmurl.h in Headers */,
 				14F8D0DE1209C429007BA637 /* vx_transform.h in Headers */,
+				14A9F1CA29AF55700003825C /* pg_config_ext.h in Headers */,
 				141CBB681459581C0011CA78 /* bv310GridAIASCIIBaseAccessor.h in Headers */,
 				14392F8217E0CA0D00B797F6 /* WMSCapabilitiesParser.h in Headers */,
 			);
@@ -1010,7 +1026,7 @@
 				MACH_O_TYPE = mh_dylib;
 				OBJROOT = build;
 				PRODUCT_NAME = MacMapSuite;
-				SDKROOT = macosx10.12;
+				SDKROOT = macosx;
 				SYMROOT = build;
 				WRAPPER_EXTENSION = framework;
 				ZERO_LINK = NO;
@@ -1022,12 +1038,12 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD)";
 				LINK_WITH_STANDARD_LIBRARIES = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				OBJROOT = build;
 				ONLY_LINK_ESSENTIAL_SYMBOLS = NO;
 				PREBINDING = NO;
 				PRELINK_LIBS = "";
-				SDKROOT = macosx10.12;
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};

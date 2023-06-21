@@ -95,6 +95,7 @@ double		ivx_proj		(	i2dvertex*	vx,
 								i2dvertex*	vr,
 								int*		idx,	
 								double*		r);
+
 // Calculate new pos of "vx" projected at "d" distance for "rad" angle
 //  -> vx : initial vertex
 // <-  vr : projected vertex
