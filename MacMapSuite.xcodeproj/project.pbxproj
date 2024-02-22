@@ -1043,7 +1043,7 @@
 				ONLY_LINK_ESSENTIAL_SYMBOLS = NO;
 				PREBINDING = NO;
 				PRELINK_LIBS = "";
-				SDKROOT = macosx;
+				SDKROOT = macosx10.12;
 			};
 			name = Release;
 		};

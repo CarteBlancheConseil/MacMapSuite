@@ -344,6 +344,47 @@ double	beta=((round((alpha+rad)/rad)-1.0)*rad);
 	vx->v=vx1->v+round(r*sin(beta));
 }
 
+// ---------------------------------------------------------------------------
+//
+// -----------
+double ivx_proj(    i2dvertex*    vx,
+                    ivertices*    vs,
+                    i2dvertex*    vr,
+                    int*        idx,
+                    double*        r){
+int         i,ni,j,nj,nv=0;
+double      r1,d1,dst;
+i2dvertex   vxa;
+i2dvertex*  vxp;
+
+    dst=0x7FFFFFFF;
+    dst*=2.0;
+    ni=ivs_n_parts(vs);
+//fprintf(stderr,"n parts = %d\n",ni);
+    for(i=0;i<ni;i++){
+        vxp=ivs2_part(vs,i,&nj);
+//fprintf(stderr,"part nb %d contains %d vertices\n",i,nj);
+        for(j=0;j<nj-1;j++){
+            d1=ivx_projonseg(vx,&vxp[j],&vxp[j+1],&vxa,&r1);
+            if(d1<dst){
+                if(r1<=0){
+                    *idx=nv+j;
+                }
+                else if(r1>=1){
+                    *idx=nv+j+1;
+                }
+                else{
+                    *idx=nv+j+1;
+                }
+                *vr=vxa;
+                *r=r1;
+                dst=d1;
+            }
+        }
+        nv+=nj;
+    }
+    return(dst);
+}
 
 // ---------------------------------------------------------------------------
 // 

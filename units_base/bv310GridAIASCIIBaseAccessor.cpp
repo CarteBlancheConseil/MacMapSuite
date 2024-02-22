@@ -704,6 +704,7 @@ char*		adrl=adr;
 					break;
 				}
 				_arr[k]=atof(adrl);
+                _tm_(adrl);
 				k++;
 				if(k>_nc*_nl){
 _te_("depassement ici "+k+">"+(_nc*_nl));
