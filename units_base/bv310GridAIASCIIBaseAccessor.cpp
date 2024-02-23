@@ -78,6 +78,11 @@ _te_("_hdr=(bStdTable*)wtbl_alloc failed with "+(*status));
 		if((*status=h_init())){
 			break;
 		}
+        
+        _srid=4326;
+        _reso=1;
+        //_u2m=1;
+        
 // on ferme et on ré-ouvre pour reso et srid
 		delete _hdr;
 		_hdr=(bStdTable*)wtbl_alloc(kTableLocalDBNoFU,fpath,name,false,_reso,-1,status);
@@ -689,6 +694,9 @@ _tm_("new double["+(_nc*_nl)+"] ok");
 			}
 			
 char*		adrl=adr;
+            if(adrl[0]==' '){
+                adrl++;
+            }
 			_arr[k]=atof(adrl);
 
 			k++;
@@ -704,7 +712,6 @@ char*		adrl=adr;
 					break;
 				}
 				_arr[k]=atof(adrl);
-                _tm_(adrl);
 				k++;
 				if(k>_nc*_nl){
 _te_("depassement ici "+k+">"+(_nc*_nl));
@@ -726,15 +733,18 @@ _te_("depassement ici "+k+">"+(_nc*_nl));
 // 
 // -----------
 ivertices* bv310GridAIASCIIBaseAccessor::make_vertices(long o){
-long	ic=(o-1L)%_nl,il=(o-1L)/_nl;
-	_dvs.vx.vx2[0].x=_ox+((double)ic)*_csz;
-	_dvs.vx.vx2[0].y=_oy+((double)_nl)*_csz-((double)il)*_csz;
+long    i=(o-1L)%_nc;
+long    j=(_nl-1L)-floor((o-1L)/_nc);
+
+    _dvs.vx.vx2[0].x=_ox+((double)i)*_csz;
+    _dvs.vx.vx2[0].y=_oy+((double)j)*_csz;
 	
 	if(_top&&_frp){
 		_top->transform(*_frp,&_dvs);
 	}
 	
 ivertices* vxs=NULL;
-	vxs_d2i(&vxs,&_dvs,_reso*_u2m);
+//	vxs_d2i(&vxs,&_dvs,_reso*_u2m);
+    vxs_d2i(&vxs,&_dvs,_wanted_reso);
 	return(vxs);
 }
