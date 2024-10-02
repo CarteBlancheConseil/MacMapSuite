@@ -157,7 +157,7 @@ void bTrace::indent(){
     //fprintf(_fp,"%012d>",(int)clock());
 	fprintf(_fp,">");
     for(int i=0;i<_indent;i++){
-		fprintf(_fp,"\t");
+        fprintf(_fp,"\t");
 	}
 }
 

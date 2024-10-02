@@ -108,6 +108,7 @@ char		path[SHRT_MAX];
 
 int		bf=0;
 wtable	tbl=wtbl_alloc(kTableTabText,path,"proj.txt",false,0,-1,&bf);
+fprintf(stderr,"wprj_gettable : path = %s\n",path);
 
 	if(bf){
 fprintf(stderr,"wprj_gettable : status=%d\n",bf);

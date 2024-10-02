@@ -577,9 +577,11 @@ int status=DB_writeHeader(db);
 //----------------------------------------------------------------------------
 // no endian needed
 //------------
-static size_t DB_fBuffLoad(int off, DB_info* db){
-int	eof,sz;
-	
+// 20240227 static size_t DB_fBuffLoad(int off, DB_info* db){
+static size_t DB_fBuffLoad(size_t off, DB_info* db){
+// 20240227 int    eof,sz;
+size_t    eof,sz;
+
 // FSEEK A MODIFIER
 	fseek(db->ff,0,SEEK_END);
 // FTELL A MODIFIER
@@ -599,9 +601,11 @@ int	eof,sz;
 //----------------------------------------------------------------------------
 // no endian needed
 //------------
-static size_t DB_uBuffLoad(int off, DB_info* db){
-int	eof,sz;
-	
+// 20240227 static size_t DB_uBuffLoad(int off, DB_info* db){
+static size_t DB_uBuffLoad(size_t off, DB_info* db){
+// 20240227 int    eof,sz;
+size_t    eof,sz;
+
 // FSEEK A MODIFIER
 	fseek(db->fu,0,SEEK_END);
 // FTELL A MODIFIER
@@ -621,18 +625,25 @@ int	eof,sz;
 //----------------------------------------------------------------------------
 // no endian needed
 //------------
-static size_t DB_fRead(void *p, int sz, int off, DB_info* db){	
+static size_t DB_fRead(void *p, size_t sz, size_t off, DB_info* db){
+// 20240227 static size_t DB_fRead(void *p, int sz, int off, DB_info* db){
+//printf("sz = %lu, offset = %lu\n",sz,off);
     if(sz<=db->rBuffSz){
+//printf("cas 1 (rBuffSz = %lu)\n",db->rBuffSz);
 // on utilise le buffer pour accélérer la lecture des petits machins
 		if((off+sz)>(db->fPos+db->rBuffSz)){
+//printf("cas 1.1 (fPos = %lu, rBuffSz = %lu)\n",db->fPos,db->rBuffSz);
 			DB_fBuffLoad(off,db);
 		}
 		else if(off<db->fPos){
+//printf("cas 1.2 (fPos = %lu)\n",db->fPos);
 			DB_fBuffLoad(off,db);
 		}
+//printf("memmove %lu, %lu\n",(size_t)(db->fBuff+off-db->fPos),sz);
 		memmove(p,(void*)db->fBuff+off-db->fPos,sz);
 	}
 	else{
+//printf("cas 2\n");
 // pas la peine de se casser pour les gros, on lit tout d'un coup
 // FSEEK A MODIFIER
 		fseek(db->ff,off,SEEK_SET);
@@ -667,8 +678,10 @@ static	size_t	DB_uRead(void	*p,	int	sz,	int	off,	DB_info* db){
 //----------------------------------------------------------------------------
 // no endian needed
 //------------
-static size_t DB_fWrite(void* p, int sz, int off, DB_info* db){
-int		start,end;
+static size_t DB_fWrite(void* p, size_t sz, size_t off, DB_info* db){
+// 20240227 static size_t DB_fWrite(void* p, int sz, int off, DB_info* db){
+// 20240227 int        start,end;
+size_t  start,end;
 size_t	k;
 
 // FSEEK A MODIFIER
@@ -2053,8 +2066,9 @@ size_t	off;
 	if((iFld>=db->nFld)||(iFld<0)){
 		return(-2);
 	}
-	off=db->dtOff+iRec*db->recSz+db->flds[iFld].off;
-    
+// 20240227 off=db->dtOff+iRec*db->recSz+db->flds[iFld].off;
+    off=db->dtOff+(size_t)iRec*db->recSz+(size_t)db->flds[iFld].off;
+
 	switch(db->flds[iFld].sign){
 		case _ivxs2:
 		case _ivxs3:{
@@ -2204,7 +2218,9 @@ size_t	off;
 		return(-3);
 	}
 	if(iRec==db->nRec){
-		off=(db->dtOff)+((db->nRec*db->recSz));
+// 20240227 Test eviter crash au dela de 2 Go
+// 20240227 (db->dtOff)+((db->nRec*db->recSz));
+		off=(db->dtOff)+(((size_t)db->nRec*db->recSz));
 		db->nRec++;
 // FSEEK A MODIFIER
 		fseek(db->ff,0,SEEK_SET);
@@ -2212,8 +2228,9 @@ size_t	off;
 		memset(db->emptyBuff,0,db->recSz);
 		DB_fWrite(db->emptyBuff,db->recSz,off,db);
 	}
-	off=(db->dtOff)+((iRec*db->recSz)+db->flds[iFld].off);
-		
+// 20240227 off=(db->dtOff)+((iRec*db->recSz)+db->flds[iFld].off);
+    off=(db->dtOff)+(((size_t)iRec*db->recSz)+(size_t)db->flds[iFld].off);
+
 	switch(db->flds[iFld].sign){
 		case _ivxs2:
 		case _ivxs3:{
@@ -2232,6 +2249,7 @@ ivertices32*    vxs32;
 				bkv=vxs->nv;
 				bko=vxs->no;
 				
+//printf("%lu\n",off);
 				DB_fRead(&usz,sizeof(DB_usz),off,db);
 				(*(db->swproc))(sizeof(int),2,&usz);
 				sz=ivssize32(vxs,&h,&v,&o);

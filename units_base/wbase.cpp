@@ -43,6 +43,7 @@
 #include "bv310GridAIASCIIBaseAccessor.h"
 #include "bLDBBaseAccessor.h"
 #include "bPGisBaseAccessor.h"
+#include "bv310CBCProbedataBaseAccessor.h"
 
 
 #include "bTrace.h"
@@ -105,7 +106,11 @@ bStdBaseAccessor*	bse=NULL;
 		case kBaseArcInfoASCIIID:
 			bse=new bv310GridAIASCIIBaseAccessor(hpath,status,kind,srid,reso,u2m,name,data);
 			break;
-			
+        case kBaseCBCProbedata:
+        case kBaseCBCProbedataRaw:
+        case kBaseCBCProbedataID:
+            bse=new bv310CBCProbedataBaseAccessor(hpath,status,kind,srid,reso,u2m,name,data);
+            break;
 		default:
 			break;
 	}
@@ -179,7 +184,13 @@ char	exp[256];
 		case kBaseArcInfoASCIIID:
 			bse=new bv310GridAIASCIIBaseAccessor(hpath,-1,0,status);
 			break;
-			
+
+        case kBaseCBCProbedata:
+        case kBaseCBCProbedataRaw:
+        case kBaseCBCProbedataID:
+            bse=new bv310CBCProbedataBaseAccessor(hpath,-1,0,status);
+            break;
+
 		default:
 			break;
 	}
@@ -255,7 +266,12 @@ char	exp[256];
 		case kBaseArcInfoASCIIID:
 			bse=new bv310GridAIASCIIBaseAccessor(hpath,wanted_srid,wanted_reso,status);
 			break;
-			
+
+        case kBaseCBCProbedata:
+        case kBaseCBCProbedataRaw:
+        case kBaseCBCProbedataID:
+            bse=new bv310CBCProbedataBaseAccessor(hpath,wanted_srid,wanted_reso,status);
+
 		default:
 			break;
 	}

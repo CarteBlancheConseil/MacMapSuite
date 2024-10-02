@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------
-// File : bv310GridAIASCIIBaseAccessor.h
+// File : bv310CBCProbedataBaseAccessor.h
 // Project : MacMapSuite
 // Purpose : Header file : Arcinfo ASCII Grid database base class accessor version 3.1.0
 // Author : Benoit Ogier, benoit.ogier@macmap.com
@@ -27,8 +27,8 @@
 // 04/07/2005 creation.
 //----------------------------------------------------------------------------
 
-#ifndef __bv310GridAIASCIIBaseAccessor__
-#define __bv310GridAIASCIIBaseAccessor__
+#ifndef __bv310CBCProbedataBaseAccessor__
+#define __bv310CBCProbedataBaseAccessor__
 
 //----------------------------------------------------------------------------
 
@@ -36,20 +36,33 @@
 #include "wgs84.h"
 
 enum{
-	kBaseArcInfoASCII		='bAIA',
-	kBaseArcInfoASCIIRaw	='9980',
-	kBaseArcInfoASCIIID		=9980
+	kBaseCBCProbedata		='bCBP',
+    kBaseCBCProbedataRaw	='9990',
+    kBaseCBCProbedataID		=9990
 };
+
+//typedef struct __attribute__ ((packed)){
+typedef struct probe_point{
+    unsigned char   mobile_id[32];
+    int             lat;
+    int             lon;
+    unsigned short  speed;
+    unsigned short  heading;
+    time_t          timestamp;
+//    unsigned char   vehicle_t;
+//    unsigned char   error_code;
+} probe_point;
+
 
 //----------------------------------------------------------------------------
 
-class bv310GridAIASCIIBaseAccessor : public bv310BaseAccessor{
+class bv310CBCProbedataBaseAccessor : public bv310BaseAccessor{
 	public:
-		bv310GridAIASCIIBaseAccessor			(	const char* hpath, 
+		bv310CBCProbedataBaseAccessor			(	const char* hpath,
 													int wanted_srid,
 													double wanted_reso,
 													int* status);
-		bv310GridAIASCIIBaseAccessor			(	const char* hpath, 
+		bv310CBCProbedataBaseAccessor			(	const char* hpath,
 													int* status,
 													int kind,
 													int srid,
@@ -57,7 +70,7 @@ class bv310GridAIASCIIBaseAccessor : public bv310BaseAccessor{
 													double u2m,
 													const char* name,												
 													const char* data);
-		virtual ~bv310GridAIASCIIBaseAccessor	(	);
+		virtual ~bv310CBCProbedataBaseAccessor	(	);
 
 		virtual int signature					(	);
 		
@@ -92,12 +105,16 @@ class bv310GridAIASCIIBaseAccessor : public bv310BaseAccessor{
 		virtual ivertices* make_vertices		(	long o);
 	
 	private:
-		long		_nc,_nl;
+		/*long		_nc,_nl;
 		double		_ox,_oy;
 		double		_csz;
 		double		_ndv;
-		double*		_arr;
+		double*		_arr;*/
 		dvertices	_dvs;
+    
+       // bStdTable*      _dat;
+        probe_point*    _prbs;
+        size_t          _nprb;
 };
 
 //----------------------------------------------------------------------------

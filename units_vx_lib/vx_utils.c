@@ -479,13 +479,14 @@ ivertices*	rvxs;
 // 
 // -----------
 dvertices*	dvx2_add(dvertices* vxs, d2dvertex* vx){
+//fprintf(stderr,"%f : %f\n",vx->x,vx->y);
 int			sz;
 dvertices*	rvxs;
 //-> CHECKED
 	if(vxs->sign==_3D_VX){
 		return(vxs);
 	}
-	if(eq_dvx2(&vxs->vx.vx2[vxs->nv-1],vx)){
+	if((vxs->nv>0) && eq_dvx2(&vxs->vx.vx2[vxs->nv-1],vx)){
 //fprintf(stderr,"dvx2_add::equal points \n");
 		return(vxs);
 	}
@@ -497,6 +498,8 @@ dvertices*	rvxs;
 	rvxs->nv++;
 	rvxs->vx.vx2[rvxs->nv-1]=*vx;
 //<- CHECKED
+//fprintf(stderr,"=> OK\n");
+
 	return(rvxs);
 }
 

@@ -112,6 +112,8 @@
 		14C6EFB5099C95040071CA4D /* bStdProj.h in Headers */ = {isa = PBXBuildFile; fileRef = 14C6EFB1099C95040071CA4D /* bStdProj.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		14C6EFB6099C95040071CA4D /* wgs84.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14C6EFB2099C95040071CA4D /* wgs84.cpp */; };
 		14C6EFB7099C95040071CA4D /* wgs84.h in Headers */ = {isa = PBXBuildFile; fileRef = 14C6EFB3099C95040071CA4D /* wgs84.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		14C825042C2AB73200BA6059 /* bv310CBCProbedataBaseAccessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 14C825022C2AB73200BA6059 /* bv310CBCProbedataBaseAccessor.h */; };
+		14C825052C2AB73200BA6059 /* bv310CBCProbedataBaseAccessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14C825032C2AB73200BA6059 /* bv310CBCProbedataBaseAccessor.cpp */; };
 		14C8313F0DECAD6D00A928E9 /* bString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14C8313D0DECAD6D00A928E9 /* bString.cpp */; };
 		14C831400DECAD6D00A928E9 /* bString.h in Headers */ = {isa = PBXBuildFile; fileRef = 14C8313E0DECAD6D00A928E9 /* bString.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		14C8BE24097D035F00B8F4C5 /* bStdBaseAccessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14C8BE1A097D035F00B8F4C5 /* bStdBaseAccessor.cpp */; };
@@ -270,6 +272,8 @@
 		14C6EFB1099C95040071CA4D /* bStdProj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bStdProj.h; sourceTree = "<group>"; };
 		14C6EFB2099C95040071CA4D /* wgs84.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = wgs84.cpp; sourceTree = "<group>"; };
 		14C6EFB3099C95040071CA4D /* wgs84.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wgs84.h; sourceTree = "<group>"; };
+		14C825022C2AB73200BA6059 /* bv310CBCProbedataBaseAccessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bv310CBCProbedataBaseAccessor.h; sourceTree = "<group>"; };
+		14C825032C2AB73200BA6059 /* bv310CBCProbedataBaseAccessor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bv310CBCProbedataBaseAccessor.cpp; sourceTree = "<group>"; };
 		14C8313D0DECAD6D00A928E9 /* bString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bString.cpp; sourceTree = "<group>"; };
 		14C8313E0DECAD6D00A928E9 /* bString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bString.h; sourceTree = "<group>"; };
 		14C8BE1A097D035F00B8F4C5 /* bStdBaseAccessor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bStdBaseAccessor.cpp; sourceTree = "<group>"; };
@@ -653,6 +657,15 @@
 			path = units_proj;
 			sourceTree = "<group>";
 		};
+		14C825012C2AB71C00BA6059 /* CBCProbedata */ = {
+			isa = PBXGroup;
+			children = (
+				14C825032C2AB73200BA6059 /* bv310CBCProbedataBaseAccessor.cpp */,
+				14C825022C2AB73200BA6059 /* bv310CBCProbedataBaseAccessor.h */,
+			);
+			name = CBCProbedata;
+			sourceTree = "<group>";
+		};
 		14C8BE11097D035F00B8F4C5 /* units_base */ = {
 			isa = PBXGroup;
 			children = (
@@ -670,6 +683,7 @@
 				1456A7610997414D00465234 /* LocalDB */,
 				1456A7620997415900465234 /* PostGIS */,
 				141CBB56145957E10011CA78 /* GridArcInfoASCII */,
+				14C825012C2AB71C00BA6059 /* CBCProbedata */,
 			);
 			path = units_base;
 			sourceTree = "<group>";
@@ -765,6 +779,7 @@
 				1463B49C097C06DE00FB5653 /* vx_lib.h in Headers */,
 				146B87F71B7BA02300D80C86 /* nad_list.h in Headers */,
 				146B87F81B7BA02300D80C86 /* org_proj4_Projections.h in Headers */,
+				14C825042C2AB73200BA6059 /* bv310CBCProbedataBaseAccessor.h in Headers */,
 				1477AF422304507400C010F4 /* postgres_ext.h in Headers */,
 				1463B49E097C06DE00FB5653 /* vx_manip.h in Headers */,
 				1463B4A0097C06DE00FB5653 /* vx_measure.h in Headers */,
@@ -943,6 +958,7 @@
 				14C8BE34097D244F00B8F4C5 /* bStdFile.cpp in Sources */,
 				14C8C08B097D3D0F00B8F4C5 /* strget.c in Sources */,
 				1460E3250993AB9B00E30534 /* bv310LDBBaseAccessor.cpp in Sources */,
+				14C825052C2AB73200BA6059 /* bv310CBCProbedataBaseAccessor.cpp in Sources */,
 				1460E3270993AB9B00E30534 /* bv310PGisBaseAccessor.cpp in Sources */,
 				1456A7AF09974FC000465234 /* wbase.cpp in Sources */,
 				14C6EF18099C94010071CA4D /* lambert93.cpp in Sources */,
@@ -994,7 +1010,6 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD)";
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)";
-				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1015,7 +1030,7 @@
 					"$(SDKROOT)/usr/include/libxml2",
 				);
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = /Library/Frameworks/MacMapSuite.framework/Versions/A/Frameworks/unix/lib;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1043,7 +1058,7 @@
 				ONLY_LINK_ESSENTIAL_SYMBOLS = NO;
 				PREBINDING = NO;
 				PRELINK_LIBS = "";
-				SDKROOT = macosx10.12;
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};

@@ -37,7 +37,7 @@
 
 //----------------------------------------------------------------------------
 
-#define _bTrace_(a,b) 		 bTrace __trc__(a,b);bString __str__("")
+#define _bTrace_(a,b) 		 bTrace __trc__(a,b);bString __str__("");
 
 #define _msg_(a)			__trc__.msg(a)
 #define _err_(a)			__trc__.err(a)

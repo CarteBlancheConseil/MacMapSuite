@@ -63,9 +63,14 @@ typedef struct DB_fld{
 }DB_fld;
 
 // Stockage des champs à largeur variable
-typedef struct DB_usz{
+// 20240227
+/*typedef struct DB_usz{
 	int			off;		// offset
 	int			sz;			// taille
+}DB_usz;*/
+typedef struct DB_usz{
+    unsigned int    off;    // offset
+    unsigned int    sz;     // taille
 }DB_usz;
 
 // Descripteur de la table
@@ -73,9 +78,11 @@ typedef struct DB_info{
 	int			spy;		// témoin de crash (inutilisé actuellement)
 	int			vers;		// version (inutilisé actuellement)
 	int			endian;		// environnement dans lequel a été créé la base
-	int			nFld;		// nombre de champs
-	int			nRec;		// nombre d'enregistrements
-	
+// 20240227	int			nFld;		// nombre de champs
+// 20240227 int			nRec;		// nombre d'enregistrements
+    unsigned int    nFld;        // nombre de champs
+    unsigned int    nRec;        // nombre d'enregistrements
+
 	size_t		recSz;		// taille d'un enregistrement
 	size_t		dtOff;		// début des enregistrements
 	
@@ -119,9 +126,11 @@ typedef struct DB_info32{
     int			spy;		// témoin de crash (inutilisé actuellement)
     int			vers;		// version (inutilisé actuellement)
     int			endian;		// environnement dans lequel a été créé la base
-    int			nFld;		// nombre de champs
-    int			nRec;		// nombre d'enregistrements
-    
+// 20240227    int            nFld;        // nombre de champs
+// 20240227 int            nRec;        // nombre d'enregistrements
+    unsigned int    nFld;        // nombre de champs
+    unsigned int    nRec;        // nombre d'enregistrements
+
     int			recSz;		// taille d'un enregistrement
     int			dtOff;		// début des enregistrements
     

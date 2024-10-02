@@ -2582,7 +2582,7 @@ _tm_("----------- PROJECTION -----------");
 // 
 // -----------
 int bv310BaseAccessor::load_fields(){
-_bTrace_("bv310BaseAccessor::load_fields",false);
+_bTrace_("bv310BaseAccessor::load_fields",true);
 int		status=noErr;
 field	f;
 int		k=1,n=_fld->CountRecords();
@@ -2782,18 +2782,18 @@ _te_("linked table "+f.tbl_id+" not found for field "+f.name);
 		//	continue;
 		}
 		
-_tm_(i+" / "+f.name+" id="+f.fid);
+//_tm_(i+" / "+f.name+" id="+f.fid);
         
 		if(!_elts.add(&f)){
 			status=-1;
 			break;
 		}
-		if(_VERBOSE_){
-/*_tm_("field "+i+" ->"+f.name+" ("+(UInt32*)&f.kind+") id="+f.fid);
+/*      if(_VERBOSE_){
+_tm_("field "+i+" ->"+f.name+" ("+(UInt32*)&f.kind+") id="+f.fid);
 _tm_("field "+i+" ->size="+f.size+" len="+f.len+" decs="+f.decs);
 _tm_("field "+i+" ->default value="+f.defval);
-_tm_("field "+i+" ->tbl index="+f.index+", tbl name="+(char*)f.tbl->get_name());*/
-		}
+_tm_("field "+i+" ->tbl index="+f.index+", tbl name="+(char*)f.tbl->get_name());
+		}*/
 		k++;
 	}
 	return(status);
@@ -2803,7 +2803,7 @@ _tm_("field "+i+" ->tbl index="+f.index+", tbl name="+(char*)f.tbl->get_name());
 // 
 // -----------
 int bv310BaseAccessor::load_constraints(){
-_bTrace_("bv310BaseAccessor::load_constraints",false);
+_bTrace_("bv310BaseAccessor::load_constraints",true);
 int		status=noErr;
 cnst	c;
 int		k,n=_cnst->CountRecords();
@@ -2821,7 +2821,7 @@ field	f;
 _te_("_cnst->ReadVal("+i+","+kCNST_fid_+",x)");
 			return(-1);
 		}
-_tm_("constraint "+i+", field id="+c.fid);
+//_tm_("constraint "+i+", field id="+c.fid);
 		f.fid=c.fid;
 		k=_elts.search(&f,field_comp);
 		if(!k){
@@ -2840,9 +2840,6 @@ _te_("_cnst->ReadVal("+i+","+kCNST_value_+",x)");
 		if(!_celts.add(&c)){
 _te_("_celts.add for "+i);
 			return(-1);
-		}
-		if(_VERBOSE_){
-//_tm_("-> id="+c.fid+" index="+c.idx+" value="+c.val);
 		}
 	}
 	_celts.sort(constraint_comp);
@@ -3353,7 +3350,6 @@ _te_("_hdr->ReadVal(1,kHDR_srid_,&_srid) failed");
 		return(-4);
 	}
 _tm_("_srid="+_srid);
-	
 	
 	return(0);
 }
