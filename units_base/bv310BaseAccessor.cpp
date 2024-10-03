@@ -2586,7 +2586,7 @@ _bTrace_("bv310BaseAccessor::load_fields",true);
 int		status=noErr;
 field	f;
 int		k=1,n=_fld->CountRecords();
-char	str[256];
+char	str[256],buf[512];
 
 // 1) on ajoute la table initiale
 bv310StaFieldAccessor*	acc=new bv310StaFieldAccessor(_objs,0);
@@ -2724,20 +2724,28 @@ _te_("database corrupted : _hdr->WriteVal failed with "+status);
 		if((status=_fld->ReadVal(i,kFLD_state_,&f.state))){
 			break;
 		}
-		if((status=_fld->ReadVal(i,kFLD_name_,f.name))){
+        //if((status=_fld->ReadVal(i,kFLD_name_,f.name))){
+        if((status=_fld->ReadVal(i,kFLD_name_,buf))){
 			break;
 		}
+        strncpy(f.name,buf,255);
 		if((status=_fld->ReadVal(i,kFLD_constKind_,&f.cnstrkind))){
 			break;
 		}
-		if((status=_fld->ReadVal(i,kFLD_default_,f.defval))){
+        //if((status=_fld->ReadVal(i,kFLD_default_,f.defval))){
+        if((status=_fld->ReadVal(i,kFLD_default_,buf))){
 			break;
 		}
+        strncpy(f.defval,buf,255);
+
 #if _HAS_FORMAT_
-		if((status=_fld->ReadVal(i,kFLD_format_,f.format))){
+        //if((status=_fld->ReadVal(i,kFLD_format_,f.format))){
+        if((status=_fld->ReadVal(i,kFLD_format_,buf))){
 			break;
 		}
+        strncpy(f.format,buf,255);
 #endif
+        
 		if((status=_fld->ReadVal(i,kFLD_index_,&f.index))){
 			//break;
 			status=0;
@@ -2782,7 +2790,7 @@ _te_("linked table "+f.tbl_id+" not found for field "+f.name);
 		//	continue;
 		}
 		
-//_tm_(i+" / "+f.name+" id="+f.fid);
+_tm_(i+" / "+f.name+" id="+f.fid);
         
 		if(!_elts.add(&f)){
 			status=-1;
@@ -2808,7 +2816,8 @@ int		status=noErr;
 cnst	c;
 int		k,n=_cnst->CountRecords();
 field	f;
-
+char    cval[512];
+    
 	for(int i=1;i<=n;i++){
 		c.offset=i;
 		c.idx=0;
@@ -2817,11 +2826,11 @@ field	f;
 		if(_cnst->RecordKilled(i)){
 			continue;
 		}
-		if((status=_cnst->ReadVal(i,kCNST_fid_,&c.fid))){
+        if((status=_cnst->ReadVal(i,kCNST_fid_,&c.fid))){
 _te_("_cnst->ReadVal("+i+","+kCNST_fid_+",x)");
 			return(-1);
 		}
-//_tm_("constraint "+i+", field id="+c.fid);
+_tm_("constraint "+i+", field id="+c.fid);
 		f.fid=c.fid;
 		k=_elts.search(&f,field_comp);
 		if(!k){
@@ -2829,14 +2838,15 @@ _tw_("field "+c.fid+" not found, constraint deleted");
 			_cnst->KillRecord(i);
 			continue;
 		}
-		if((status=_cnst->ReadVal(i,kCNST_idx_,&c.idx))){
+        if((status=_cnst->ReadVal(i,kCNST_idx_,&c.idx))){
 _te_("_cnst->ReadVal("+i+","+kCNST_idx_+",x)");
 			return(-1);
 		}
-		if((status=_cnst->ReadVal(i,kCNST_value_,c.val))){
+        if((status=_cnst->ReadVal(i,kCNST_value_,cval))){
 _te_("_cnst->ReadVal("+i+","+kCNST_value_+",x)");
 			return(-1);
 		}
+        strncpy(c.val,cval,255);
 		if(!_celts.add(&c)){
 _te_("_celts.add for "+i);
 			return(-1);
